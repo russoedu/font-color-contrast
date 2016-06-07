@@ -1,6 +1,6 @@
 {
   "name": "font-color-contrast",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "NodeJS module to use black or white font according to the given background color",
   "main": "font-color-contrast.js",
   "scripts": {

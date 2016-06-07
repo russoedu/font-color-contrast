@@ -21,7 +21,7 @@ You can use the module 3 ways:
 If any other format is sent, the function will respond with white by default.
 
 ```javascript
-var fontColorContrast = require('../font-color-contrast.js');
+var fontColorContrast = require('font-color-contrast');
 
 var lightGreenBackground: "#b6e9be";
 var paleYellowBackground = ["255", "246", "199"];
