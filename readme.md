@@ -9,7 +9,7 @@ NodeJS module to select black or white to a font according to the background.
 
 ## Installation
 
-  $ npm install --save font-color-contrast
+    $ npm install --save font-color-contrast
 
 ## Usage
 
