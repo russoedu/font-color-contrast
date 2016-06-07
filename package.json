@@ -1,0 +1,34 @@
+{
+  "name": "font-color-contrast",
+  "version": "1.0.0",
+  "description": "NodeJS module to use black or white font according to the given background color",
+  "main": "font-color-contrast.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/russoedu/font-color-contrast.git"
+  },
+  "files": [
+    "font-color-contrast.js"
+  ],
+  "keywords": [
+    "color",
+    "contrast",
+    "font",
+    "background"
+  ],
+  "author": "Eduardo Russo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/russoedu/font-color-contrast/issues"
+  },
+  "devDependencies": {
+    "eslint": "^2.8.0",
+    "eslint-config-google": "^0.5.0",
+    "eslint-plugin-jsdoc": "^2.3.1",
+    "jsdoc": "^3.4.0"
+  },
+  "homepage": "https://github.com/russoedu/font-color-contrast#readme"
+}
