@@ -1,15 +1,25 @@
 {
   "name": "font-color-contrast",
-  "version": "1.1.1",
-  "description": "NodeJS module to use black or white font according to the given background color",
-  "main": "font-color-contrast.js",
-  "types": "index.d.ts",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "version": "1.2.0",
+  "description": "JavaScript module to use black or white font according to the given background color",
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "lib"
   },
+  "scripts": {
+    "build": "tsc",
+    "install": "tsc",
+    "test": "jest"
+  },
+  "author": "Eduardo Russo",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/russoedu/font-color-contrast.git"
+  },
+  "homepage": "https://github.com/russoedu/font-color-contrast#readme",
+  "bugs": {
+    "url": "https://github.com/russoedu/font-color-contrast/issues"
   },
   "keywords": [
     "color",
@@ -17,16 +27,21 @@
     "font",
     "background"
   ],
-  "author": "Eduardo Russo",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/russoedu/font-color-contrast/issues"
-  },
   "devDependencies": {
-    "eslint": "^2.8.0",
-    "eslint-config-google": "^0.5.0",
-    "eslint-plugin-jsdoc": "^2.3.1",
-    "jsdoc": "^3.4.0"
-  },
-  "homepage": "https://github.com/russoedu/font-color-contrast#readme"
+    "@types/jest": "^27.0.2",
+    "@types/node": "^16.11.6",
+    "@typescript-eslint/eslint-plugin": "^5.2.0",
+    "@typescript-eslint/parser": "^5.2.0",
+    "coveralls": "^3.1.1",
+    "eslint": "^8.1.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.1.1",
+    "eslint-plugin-standard": "^5.0.0",
+    "jest": "^27.3.1",
+    "jest-junit": "^13.0.0",
+    "ts-jest": "^27.0.7",
+    "typescript": "^4.4.4"
+  }
 }
