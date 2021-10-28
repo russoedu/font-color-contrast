@@ -50,8 +50,8 @@ Tests made using [Jest](https://jestjs.io/) to check color format possibilities 
 ## Examples
 
 ### WebSafe colors
-![Sample with WebSafe colors](https://github.com/russoedu/font-color-contrast/blob/ts/websafe-colors.jpeg?raw=true)
+![Sample with WebSafe colors](https://github.com/russoedu/font-color-contrast/blob/master/websafe-colors.jpeg?raw=true)
 
 
 ### CSS colors
-![Sample with CSS colors](https://github.com/russoedu/font-color-contrast/blob/ts/css-colors.jpeg?raw=true)
+![Sample with CSS colors](https://github.com/russoedu/font-color-contrast/blob/master/css-colors.jpeg?raw=true)
