@@ -47,4 +47,11 @@ var fontColor3 = fontColorContrast(
 
 Tests made using [Jest](https://jestjs.io/) to check color format possibilities and contrast, including all CSS colors and WebSafe (90's stuff) colors as shown in the image below
 
-![Sample with CSS colors and WebSafe colors](https://github.com/russoedu/font-color-contrast/blob/master/all-colors.jpeg?raw=true)
+## Examples
+
+### WebSafe colors
+![Sample with WebSafe colors](https://github.com/russoedu/font-color-contrast/blob/ts/websafe-colors.jpeg?raw=true)
+
+
+### CSS colors
+![Sample with CSS colors](https://github.com/russoedu/font-color-contrast/blob/ts/css-colors.jpeg?raw=true)
