@@ -9,7 +9,7 @@ NodeJS module to select black or white to a font according to the background.
 
 ## Installation
 
-    $ npm install --save font-color-contrast
+    $ npm i font-color-contrast
 
 ## Usage
 
@@ -45,15 +45,6 @@ var fontColor3 = fontColorContrast(
 ```
 ## Tests
 
-Tests made using [Jasmine](http://jasmine.github.io/) to check color format possibilities and contrast.
+Tests made using [Jest](https://jestjs.io/) to check color format possibilities and contrast, including all CSS colors and WebSafe (90's stuff) colors as shown in the image below
 
-## License
-The MIT License (MIT)
-
-Copyright (c) 2016 Moblets
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+![Sample with CSS colors and WebSafe colors](./all-colors.jpg)
