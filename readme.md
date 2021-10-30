@@ -55,3 +55,13 @@ Tests made using [Jest](https://jestjs.io/) to check color format possibilities 
 
 ### CSS colors
 ![Sample with CSS colors](https://github.com/russoedu/font-color-contrast/blob/master/css-colors.jpeg?raw=true)
+
+## Version history
+
+### 0 -> 8.1.1
+JavaScript version, accepting strings for RGB
+
+### 9.0.0
+TypeScript version.
+
+Only numbers are now accepted as params when using array or RGB, because it was impossible to know if the string was decimal or hexadecimal. Accepting only numbers we can be sure the correct values are being used to calculate the contrast.

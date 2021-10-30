@@ -1,6 +1,6 @@
 {
   "name": "font-color-contrast",
-  "version": "8.2.0",
+  "version": "9.0.0",
   "description": "JavaScript module to use black or white font according to the given background color",
   "main": "lib/index.js",
   "directories": {
