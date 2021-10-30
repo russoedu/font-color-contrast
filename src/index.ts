@@ -9,15 +9,6 @@ type ColorIntensity = number | string
 
 /**
  * Analyses the color (normally used in the background) and retrieves what color (black or white) has a better contrast.
- * @param hexColorOrRedOrArray The hex color string or the red portion of a color or the full color array
- * @param green The green portion of the color. Must be a number between 0 and 255
- * @param blue The blue portion of the color. Must be a number between 0 and 255
- * @returns Black or White hex color string
- */
- function fontColorContrast (hexColorOrRedOrArray: string | number | number[], green?: number, blue?: number): '#ffffff' | '#000000'
-
-/**
- * Analyses the color (normally used in the background) and retrieves what color (black or white) has a better contrast.
  * @param hex The hex color number that must be a valid hexadecimal color number, with 6 characters, to work correctly
  * @example fontColorContrast(0XF3DC56) === fontColorContrast(15981654)
  */
