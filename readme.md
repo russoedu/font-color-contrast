@@ -1,9 +1,12 @@
 # font-color-contrast
 
-[![npm](https://img.shields.io/npm/v/npm.svg?maxAge=2592000&style=flat-square)](https://www.npmjs.com/package/font-color-contrast)
-[![npm](https://img.shields.io/npm/dt/express.svg?maxAge=2592000&style=flat-square)](https://www.npmjs.com/package/font-color-contrast)
-![stars](https://img.shields.io/github/stars/russoedu/font-color-contrast.svg?style=flat-square)
-![license](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)
+[![npm](https://img.shields.io/npm/v/font-color-contrast.svg?maxAge=2592000)](https://www.npmjs.com/package/font-color-contrast)
+[![CI Pipeline](https://github.com/russoedu/font-color-contrast/actions/workflows/main.yml/badge.svg)](https://github.com/russoedu/font-color-contrast/actions/workflows/main.yml)
+[![Build Status](https://scrutinizer-ci.com/g/russoedu/sequential-id-generator/badges/build.png?b=main)](https://scrutinizer-ci.com/g/russoedu/sequential-id-generator/build-status/main)
+[![Coverage Status](https://coveralls.io/repos/github/russoedu/font-color-contrast/badge.svg?branch=ts)](https://coveralls.io/github/russoedu/font-color-contrast?branch=ts)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/russoedu/font-color-contrast/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/russoedu/font-color-contrast/?branch=master)
+[![Code Climate](https://codeclimate.com/github/dwyl/esta/badges/gpa.svg)](https://codeclimate.com/github/russoedu/font-color-contrast)
+[![Known Vulnerabilities](https://snyk.io/test/npm/font-color-contrast/badge.svg)](https://snyk.io/test/npm/font-color-contrast)
 
 NodeJS module to select black or white to a font according to the background.
 
