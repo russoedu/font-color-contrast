@@ -1,0 +1,38 @@
+# http://editorconfig.org
+
+# -------------------------------------------------------------------------------------------------
+# Default configuration
+# -------------------------------------------------------------------------------------------------
+# top-most EditorConfig file
+root = true
+
+# Default for all files
+[*]
+indent_style = space
+indent_size = 2
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+root = true
+
+# -------------------------------------------------------------------------------------------------
+# Documentation
+# -------------------------------------------------------------------------------------------------
+
+[*.md]
+indent_style = space
+trim_trailing_whitespace = false
+indent_size = 2
+
+# -------------------------------------------------------------------------------------------------
+# Configuration and Scripts
+# -------------------------------------------------------------------------------------------------
+[shell.bat]
+end_of_line = crlf
+indent_style = tab
+indent_size = 4
+
+[shell.sh]
+indent_style = tab
+indent_size = 4
