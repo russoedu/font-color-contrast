@@ -59,7 +59,7 @@ function fontColorContrast (hexColorOrRedOrArray: string | number | number[], gr
 export default fontColorContrast
 
 /**
- * Converts an hexadecimal string to it's correspondent integer
+ * Converts a hexadecimal string to it's correspondent integer
  * @param hexString The hexadecimal string
  * @returns The integer value
  */
