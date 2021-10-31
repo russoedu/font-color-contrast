@@ -1,12 +1,12 @@
 {
     "files.exclude": {
-        // ".editorconfig": true,
-        // ".eslintignore": true,
-        // ".gitignore": true,
-        // "node_modules": true,
-        // "package-lock.json": true,
-        // ".eslintrc.js": true,
-        // "jest.config.js": true
+        ".editorconfig": true,
+        ".eslintignore": true,
+        ".gitignore": true,
+        "node_modules": true,
+        "package-lock.json": true,
+        ".eslintrc.js": true,
+        "jest.config.js": true
     },
     "favorites.resources": [
         "package.json",
