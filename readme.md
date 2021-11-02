@@ -96,7 +96,10 @@ Tests made using [Jest](https://jestjs.io/) to check color format possibilities 
 ### 0 -> 8.1.1
 JavaScript version, accepting strings for RGB
 
-### 9.0.0
+### 9.0.0 -> 9.0.2
 TypeScript version.
 
 Only numbers are now accepted as params when using array or RGB, because it was impossible to know if the string was decimal or hexadecimal. Accepting only numbers we can be sure the correct values are being used to calculate the contrast.
+
+### 9.1.0
+Updated algorithm from https://alienryderflex.com/hsp.html with new thresholds for better contrast

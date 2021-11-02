@@ -53,7 +53,7 @@ function fontColorContrast (hexColorOrRedOrArray: string | number | number[], gr
     return '#ffffff'
   }
 
-  return contrastColor(red, green, blue)
+  return contrastFromHSP(red, green, blue)
 }
 
 export default fontColorContrast
@@ -154,20 +154,24 @@ function arrayOrRgbToRGB (redOrArray: number | number[], green?: number, blue?: 
 }
 
 /**
- * Calculates the best color (black or white) to contrast with the passed RGB color
+ * Calculates the best color (black or white) to contrast with the passed RGB color using the algorithm from https://alienryderflex.com/hsp.html
  * @param red The color red value
  * @param green The color green value
  * @param blue The color blue value
  * @returns Black or White depending on the best possible contrast
  */
-function contrastColor (red: number, green: number, blue: number): '#000000' | '#ffffff' {
+function contrastFromHSP (red: number, green: number, blue: number): '#000000' | '#ffffff' {
+  const pRed = 0.299
+  const pGreen = 0.587
+  const pBlue = 0.114
+
   const contrast = Math.sqrt(
-    red * red * 0.241 +
-    green * green * 0.691 +
-    blue * blue * 0.068
+    pRed * Math.pow((red / 255), 2) +
+    pGreen * Math.pow((green / 255), 2) +
+    pBlue * Math.pow((blue / 255), 2)
   )
 
-  return contrast > 130
+  return contrast > 0.5
     ? '#000000'
     : '#ffffff'
 }
