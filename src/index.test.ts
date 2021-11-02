@@ -62,15 +62,6 @@ describe('fontColorContrast', () => {
     expect(c1).toBe(c6)
   })
 
-  test('all possibilities with RGB', () => {
-    const c1 = fontColorContrast(0, 0xcc, 153)
-    const c2 = fontColorContrast(0x0, 0xcc, 153)
-    const c3 = fontColorContrast(0, 204, 0x99)
-    expect(c1).toBe('#000000')
-    expect(c1).toBe(c2)
-    expect(c1).toBe(c3)
-  })
-
   test('hexadecimal color', () => {
     const font = fontColorContrast('#f7d4fc')
     expect(font).toBe('#000000')
@@ -81,24 +72,14 @@ describe('fontColorContrast', () => {
     expect(font).toBe('#000000')
   })
 
-  test('RGB color on each param', () => {
-    const font = fontColorContrast(
-      223,
-      0,
-      255
-    ) // #df00ff
-    expect(font).toBe('#000000')
-  })
-
   test('same strange grey background from all types', () => {
     const c1 = fontColorContrast('#645466')
     const c2 = fontColorContrast('645466')
     const c3 = fontColorContrast(0X645466)
     const c4 = fontColorContrast(6575206) // 0X645466 converted to decimal
-    const c5 = fontColorContrast(0x64, 0x54, 0x66)
-    const c6 = fontColorContrast([64, 54, 66])
-    const c7 = fontColorContrast([0x64, 0x54, 0x66])
-    const c8 = fontColorContrast([64, 54, 66])
+    const c5 = fontColorContrast([64, 54, 66])
+    const c6 = fontColorContrast([0x64, 0x54, 0x66])
+    const c7 = fontColorContrast([64, 54, 66])
     expect(c1).toBe('#ffffff')
     expect(c2).toBe('#ffffff')
     expect(c3).toBe('#ffffff')
@@ -106,7 +87,6 @@ describe('fontColorContrast', () => {
     expect(c5).toBe('#ffffff')
     expect(c6).toBe('#ffffff')
     expect(c7).toBe('#ffffff')
-    expect(c8).toBe('#ffffff')
   })
 
   test('default response when not a valid param', () => {
@@ -119,5 +99,19 @@ describe('fontColorContrast', () => {
   test('RGB color on array', () => {
     const font = fontColorContrast([20, 85, 91])
     expect(font).toBe('#ffffff')
+  })
+
+  test('threshold param should alter result font color', () => {
+    const hexString = '#645466'
+    expect(fontColorContrast(hexString, 0)).toBe('#000000')
+    expect(fontColorContrast(hexString, 1)).toBe('#ffffff')
+
+    const hexNumber = 0X645466
+    expect(fontColorContrast(hexNumber, 0)).toBe('#000000')
+    expect(fontColorContrast(hexNumber, 1)).toBe('#ffffff')
+
+    const rbgArray = [20, 85, 91]
+    expect(fontColorContrast(rbgArray, 0)).toBe('#000000')
+    expect(fontColorContrast(rbgArray, 1)).toBe('#ffffff')
   })
 })
