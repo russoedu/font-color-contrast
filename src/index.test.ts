@@ -52,7 +52,7 @@ describe('fontColorContrast', () => {
     const c3 = fontColorContrast('#000000')
     const c4 = fontColorContrast('000000')
     const c5 = fontColorContrast(0)
-    const c6 = fontColorContrast(0x00000)
+    const c6 = fontColorContrast(0x0)
 
     expect(c1).toBe('#ffffff')
     expect(c1).toBe(c2)
@@ -95,10 +95,9 @@ describe('fontColorContrast', () => {
     const c2 = fontColorContrast('645466')
     const c3 = fontColorContrast(0X645466)
     const c4 = fontColorContrast(6575206) // 0X645466 converted to decimal
-    const c5 = fontColorContrast(0x64, 0x54, 0x66)
-    const c6 = fontColorContrast([64, 54, 66])
-    const c7 = fontColorContrast([0x64, 0x54, 0x66])
-    const c8 = fontColorContrast([64, 54, 66])
+    const c5 = fontColorContrast([100, 84, 102])
+    const c6 = fontColorContrast([0x64, 0x54, 0x66])
+    const c7 = fontColorContrast([100, 84, 102])
     expect(c1).toBe('#ffffff')
     expect(c2).toBe('#ffffff')
     expect(c3).toBe('#ffffff')
@@ -106,7 +105,6 @@ describe('fontColorContrast', () => {
     expect(c5).toBe('#ffffff')
     expect(c6).toBe('#ffffff')
     expect(c7).toBe('#ffffff')
-    expect(c8).toBe('#ffffff')
   })
 
   test('default response when not a valid param', () => {
@@ -119,5 +117,34 @@ describe('fontColorContrast', () => {
   test('RGB color on array', () => {
     const font = fontColorContrast([20, 85, 91])
     expect(font).toBe('#ffffff')
+  })
+
+  test('threshold param should alter result font color with a close to the limit color', () => {
+    // This color contrast is 0.4915548540582736
+    const hexString = '#837984'
+    expect(fontColorContrast(hexString)).toBe('#ffffff')
+    expect(fontColorContrast(hexString, 0.49)).toBe('#000000')
+    expect(fontColorContrast(hexString, 0)).toBe('#000000')
+    expect(fontColorContrast(hexString, 1)).toBe('#ffffff')
+
+    const hexNumber = 0x837984
+    expect(fontColorContrast(hexNumber)).toBe('#ffffff')
+    expect(fontColorContrast(hexNumber, 0)).toBe('#000000')
+    expect(fontColorContrast(hexNumber, 0.49)).toBe('#000000')
+    expect(fontColorContrast(hexNumber, 1)).toBe('#ffffff')
+
+    const rbgArray = [131, 121, 132]
+    expect(fontColorContrast(rbgArray)).toBe('#ffffff')
+    expect(fontColorContrast(rbgArray, 0)).toBe('#000000')
+    expect(fontColorContrast(rbgArray, 0.49)).toBe('#000000')
+    expect(fontColorContrast(rbgArray, 1)).toBe('#ffffff')
+
+    const red = 131
+    const green = 121
+    const blue = 132
+    expect(fontColorContrast(red, green, blue)).toBe('#ffffff')
+    expect(fontColorContrast(red, green, blue, 0)).toBe('#000000')
+    expect(fontColorContrast(red, green, blue, 0.49)).toBe('#000000')
+    expect(fontColorContrast(red, green, blue, 1)).toBe('#ffffff')
   })
 })

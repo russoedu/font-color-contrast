@@ -8,7 +8,9 @@
 [![Code Climate](https://codeclimate.com/github/dwyl/esta/badges/gpa.svg)](https://codeclimate.com/github/russoedu/font-color-contrast)
 [![Known Vulnerabilities](https://snyk.io/test/npm/font-color-contrast/badge.svg)](https://snyk.io/test/npm/font-color-contrast)
 
-NodeJS module to select black or white to a font according to the background.
+JavaScript module to select black or white to a font according to the background for the best possible contrast.
+
+Calculates the best color (black or white) to contrast with the passed color using the algorithm from https://alienryderflex.com/hsp.html
 
 ## Installation
 
@@ -16,11 +18,25 @@ NodeJS module to select black or white to a font according to the background.
 
 ## Usage
 
-You can use the module 3 ways:
-- with a hexadecimal color (number or string), i.e. fontColor("#f7d4fc") or fontColor(0xf7d56a) or even fontColor(16242026)
-- with an RGB separated by comma color (number), i.e. fontColor(223, 0, 255)
-- with an RGB array color (number), i.e. fontColor([223, 0, 255])
+You can use the module 4 ways, with an optional parameter (from 0 to 1) for contrast threshold:
+- with a hexadecimal color string
+  - fontColor('#f7d4fc')
+  - fontColor('f7d4fc')
+  - fontColor('f7d4fc', 0.2)
+- with a color number
+  - fontColor(0xf7d56a)
+  - fontColor(16242026)
+  - fontColor(16242026, 0.8)
+- with an array of numbers with the RGB color:
+  - fontColor([223, 0, 255])
+  - fontColor([0xf7, 0, 0xff])
+  - fontColor([0xf7, 0, 0xff], 0.4)
+- with the RGB color numbers:
+  - fontColor(223, 0, 255)
+  - fontColor(0xf7, 0, 0xff)
+  - fontColor(0xf7, 0, 0xff, 0.4)
 
+Example:
 ```Typescript
 import fontColorContrast from 'font-color-contrast'
 
@@ -30,15 +46,23 @@ const fontColor = fontColorContrast(myStringBg) // '#000000'
 const myNumberBg = 0x00cc99
 const fontColor = fontColorContrast(myNumberBg) // '#000000'
 
-const myRgbBg = {
-  red: 0,
-  green: 204,
-  blue: 153
-}
-const fontColor = fontColorContrast(myRgbBg.red, myRgbBg.green, myRgbBg.blue) // '#000000'
+const red = 0
+const green = 204
+const blue = 153
+const fontColor = fontColorContrast(red, green, blue) // '#000000'
 
 const myArrayBg = [0, green: 204, blue: 153]
 const fontColor = fontColorContrast(myArrayBg) // '#000000'
+
+```
+
+Optionally, you can pass the contrast threshold (defaults to 0.5). This will affect the resulting font color. The use of this parameter is to control the [WCAG conformance levels](https://www.w3.org/WAI/WCAG2A-Conformance).
+
+ ```Typescript
+import fontColorContrast from 'font-color-contrast'
+
+fontColorContrast('#645466', 0) // '#000000'
+fontColorContrast('#645466', 1) // '#ffffff'
 
 ```
 
@@ -46,36 +70,44 @@ The 4 possible overflows are described next:
 
 ```Typescript
 /**
- * @param hex The hex color number that must be a valid hexadecimal color number, with 6 characters, to work correctly
+ * Analyses the color (normally used in the background) and retrieves what color (black or white) has a better contrast.
+ * @param hex The hex color number that must be a valid hexadecimal color number, with 6 characters, to work correctly.
+ * @param threshold Contrast threshold to control the resulting font color, float values from 0 to 1. Default is 0.5.
  * @example fontColorContrast(0XF3DC56) === fontColorContrast(15981654)
  */
-function fontColorContrast (hex: number): '#ffffff' | '#000000'
+function fontColorContrast (hex: number, threshold?: number): '#ffffff' | '#000000'
 ```
 
 ```Typescript
 /**
- * @param hex The hex color string that must be a valid hexadecima color number to work correctly. Works with or without '#', with 3 or 6 color chars
+ * Analyses the color (normally used in the background) and retrieves what color (black or white) has a better contrast.
+ * @param hex The hex color string that must be a valid hexadecima color number to work correctly. Works with or without '#', with 3 or 6 color chars.
+ * @param threshold Contrast threshold to control the resulting font color, float values from 0 to 1. Default is 0.5.
  * @example fontColorContrast('00FFDD') === fontColorContrast('0FD') === fontColorContrast('#00FFDD') === fontColorContrast('#0FD')
  */
- function fontColorContrast (hex: string): '#ffffff' | '#000000'
+ function fontColorContrast (hex: string, threshold?: number): '#ffffff' | '#000000'
 ```
 
 ```Typescript
 /**
- * @param red The red portion of the color. Must be a number between 0 and 255
- * @param green The green portion of the color. Must be a number between 0 and 255
- * @param blue The blue portion of the color. Must be a number between 0 and 255
- * @example fontColorContrast('00', 'F3', D8) === fontColorContrast(0, 243, 216) === fontColorContrast(0x0, 0xF3, 0xd8)
+ * Analyses the color (normally used in the background) and retrieves what color (black or white) has a better contrast.
+ * @param red The red portion of the color. Must be a number between 0 and 255.
+ * @param green The green portion of the color. Must be a number between 0 and 255.
+ * @param blue The blue portion of the color. Must be a number between 0 and 255.
+ * @example fontColorContrast('00', 'F3', D8) === fontColorContrast(0, 243, 216) === fontColorContrast(0x0, 0xF3, 0xd8).
+ * @param threshold Contrast threshold to control the resulting font color, float values from 0 to 1. Default is 0.5.
  */
-function fontColorContrast (red: number, green: number, blue: number): '#ffffff' | '#000000'
+function fontColorContrast (red: number, green: number, blue: number, threshold?: number): '#ffffff' | '#000000'
 ```
 
 ```Typescript
 /**
- * @param redGreenBlue Array with red, green and blue. Each value must be a number between 0 and 255
+ * Analyses the color (normally used in the background) and retrieves what color (black or white) has a better contrast.
+ * @param redGreenBlue Array with red, green and blue. Each value must be a number between 0 and 255.
+ * @param threshold Contrast threshold to control the resulting font color, float values from 0 to 1. Default is 0.5.
  * @example fontColorContrast(['00', 'F3', 'D8']) === fontColorContrast([0, 243, 216]) === fontColorContrast([0x0, 0xF3, 0xd8])
  */
-function fontColorContrast (redGreenBlue: number[]): '#ffffff' | '#000000'
+function fontColorContrast(redGreenBlue: number[], threshold?: number): '#ffffff' | '#000000'
 ```
 
 ## Tests
@@ -83,6 +115,8 @@ function fontColorContrast (redGreenBlue: number[]): '#ffffff' | '#000000'
 Tests made using [Jest](https://jestjs.io/) to check color format possibilities and contrast, including all CSS colors and WebSafe (90's stuff) colors as shown in the image below
 
 ## Examples
+
+These examples are using the default 0.5 threshold.
 
 ### WebSafe colors
 ![Sample with WebSafe colors](https://github.com/russoedu/font-color-contrast/blob/master/websafe-colors.jpeg?raw=true)
@@ -103,3 +137,6 @@ Only numbers are now accepted as params when using array or RGB, because it was 
 
 ### 9.1.0
 Updated algorithm from https://alienryderflex.com/hsp.html with new thresholds for better contrast.
+
+### 10.0.0
+Included the optional threshold parameter (thanks, [franciscohanna92](https://github.com/franciscohanna92)).
