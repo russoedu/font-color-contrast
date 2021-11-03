@@ -8,7 +8,7 @@
 [![Code Climate](https://codeclimate.com/github/dwyl/esta/badges/gpa.svg)](https://codeclimate.com/github/russoedu/font-color-contrast)
 [![Known Vulnerabilities](https://snyk.io/test/npm/font-color-contrast/badge.svg)](https://snyk.io/test/npm/font-color-contrast)
 
-NodeJS module to select black or white to a font according to the background.
+JavaScript module to select black or white to a font according to the background for the best possible contrast.
 
 ## Installation
 
