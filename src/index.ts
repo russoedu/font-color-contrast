@@ -1,6 +1,5 @@
 const hashRegEx = /#/
 const hexRegEx = /0x/i
-let isRGB: boolean
 let isArray: boolean
 let isHexString: boolean
 let isHexNumber: boolean
@@ -10,50 +9,45 @@ type ColorIntensity = number | string
 /**
  * Analyses the color (normally used in the background) and retrieves what color (black or white) has a better contrast.
  * @param hex The hex color number that must be a valid hexadecimal color number, with 6 characters, to work correctly
+ * @param threshold Contrast threshold to control the resulting font color
  * @example fontColorContrast(0XF3DC56) === fontColorContrast(15981654)
  */
-function fontColorContrast (hex: number): '#ffffff' | '#000000'
+function fontColorContrast (hex: number, threshold?: number): '#ffffff' | '#000000'
 
 /**
  * Analyses the color (normally used in the background) and retrieves what color (black or white) has a better contrast.
  * @param hex The hex color string that must be a valid hexadecima color number to work correctly. Works with or without '#', with 3 or 6 color chars
+ * @param threshold Contrast threshold to control the resulting font color
  * @example fontColorContrast('00FFDD') === fontColorContrast('0FD') === fontColorContrast('#00FFDD') === fontColorContrast('#0FD')
  */
- function fontColorContrast (hex: string): '#ffffff' | '#000000'
-
-/**
- * Analyses the color (normally used in the background) and retrieves what color (black or white) has a better contrast.
- * @param red The red portion of the color. Must be a number between 0 and 255
- * @param green The green portion of the color. Must be a number between 0 and 255
- * @param blue The blue portion of the color. Must be a number between 0 and 255
- * @example fontColorContrast('00', 'F3', D8) === fontColorContrast(0, 243, 216) === fontColorContrast(0x0, 0xF3, 0xd8)
- */
-function fontColorContrast (red: number, green: number, blue: number): '#ffffff' | '#000000'
+ function fontColorContrast (hex: string, threshold?: number): '#ffffff' | '#000000'
 
 /**
  * Analyses the color (normally used in the background) and retrieves what color (black or white) has a better contrast.
  * @param redGreenBlue Array with red, green and blue. Each value must be a number between 0 and 255
+ * @param threshold Contrast threshold to control the resulting font color
  * @example fontColorContrast(['00', 'F3', 'D8']) === fontColorContrast([0, 243, 216]) === fontColorContrast([0x0, 0xF3, 0xd8])
  */
-function fontColorContrast (redGreenBlue: number[]): '#ffffff' | '#000000'
+function fontColorContrast(redGreenBlue: number[], threshold?: number): '#ffffff' | '#000000'
 
-function fontColorContrast (hexColorOrRedOrArray: string | number | number[], green?: number, blue?: number) {
+function fontColorContrast (hexColorOrArray: string | number | number[], threshold?: number) {
   let red = 0
-  isRGB = !!(green !== undefined && blue !== undefined)
-  isArray = Array.isArray(hexColorOrRedOrArray)
-  isHexString = typeof hexColorOrRedOrArray === 'string' && !isRGB
-  isHexNumber = typeof hexColorOrRedOrArray === 'number' && !isRGB
+  let green = 0
+  let blue = 0
+  isArray = Array.isArray(hexColorOrArray)
+  isHexString = typeof hexColorOrArray === 'string'
+  isHexNumber = typeof hexColorOrArray === 'number'
 
   if (isHexString || isHexNumber) {
-    [red, green, blue] = hexColorToRGB(hexColorOrRedOrArray as ColorIntensity)
-  } else if (isRGB || isArray) {
-    [red, green, blue] = arrayOrRgbToRGB(hexColorOrRedOrArray as number | number[], green as number, blue as number)
+    [red, green, blue] = hexColorToRGB(hexColorOrArray as ColorIntensity)
+  } else if (isArray) {
+    [red, green, blue] = hexColorOrArray as number[]
   } else {
     // Not a color, respond with white color
     return '#ffffff'
   }
 
-  return contrastFromHSP(red, green, blue)
+  return contrastFromHSP(red, green, blue, threshold)
 }
 
 export default fontColorContrast
@@ -123,44 +117,13 @@ function hexColorToRGB (hexColor: ColorIntensity): [red: number, green: number, 
 }
 
 /**
- * Converts a color array or separated in RGB to the respective RGB values
- * @param redOrArray The RGB array or the color red
- * @param green The color green
- * @param blue The color blue
- * @returns The array with the RGB values
- * @example All these examples produces the same value
- * arrayOrRgbToRGB(0, 0xcc, 153)
- * arrayOrRgbToRGB(0x0, 0xcc, 153)
- * arrayOrRgbToRGB(0, 204, 0x99)
- * arrayOrRgbToRGB([0, 0xcc, 153])
- * arrayOrRgbToRGB([0x0, 0xcc, 153])
- * arrayOrRgbToRGB([0, 204, 0x99])
- */
-function arrayOrRgbToRGB (redOrArray: number | number[], green?: number, blue?: number): [red: number, green: number, blue: number] {
-  let r = 0
-  let g = 0
-  let b = 0
-  if (isArray) {
-    r = (redOrArray as number[])[0]
-    g = (redOrArray as number[])[1]
-    b = (redOrArray as number[])[2]
-  } else if (isRGB) {
-    r = redOrArray as number
-    g = green as number
-    b = blue as number
-  }
-
-  return [r, g, b]
-}
-
-/**
  * Calculates the best color (black or white) to contrast with the passed RGB color using the algorithm from https://alienryderflex.com/hsp.html
  * @param red The color red value
  * @param green The color green value
  * @param blue The color blue value
  * @returns Black or White depending on the best possible contrast
  */
-function contrastFromHSP (red: number, green: number, blue: number): '#000000' | '#ffffff' {
+function contrastFromHSP (red: number, green: number, blue: number, threshold = 0.5): '#000000' | '#ffffff' {
   const pRed = 0.299
   const pGreen = 0.587
   const pBlue = 0.114
@@ -171,7 +134,7 @@ function contrastFromHSP (red: number, green: number, blue: number): '#000000' |
     pBlue * Math.pow((blue / 255), 2)
   )
 
-  return contrast > 0.5
+  return contrast > threshold
     ? '#000000'
     : '#ffffff'
 }
