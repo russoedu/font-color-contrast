@@ -7,8 +7,8 @@
     "lib": "lib"
   },
   "scripts": {
-    "build": "tsc",
-    "install": "tsc",
+    "build": "npx tsc",
+    "install": "npx tsc",
     "test": "jest"
   },
   "author": "Eduardo Russo",
