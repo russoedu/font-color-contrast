@@ -140,3 +140,6 @@ Updated algorithm from https://alienryderflex.com/hsp.html with new thresholds f
 
 ### 10.0.0
 Included the optional threshold parameter (thanks, [franciscohanna92](https://github.com/franciscohanna92)).
+
+### 10.0.1
+Changed target to ES2015
