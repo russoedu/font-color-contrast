@@ -8,7 +8,6 @@
   },
   "scripts": {
     "build": "tsc",
-    "install": "tsc",
     "test": "jest"
   },
   "author": "Eduardo Russo",
