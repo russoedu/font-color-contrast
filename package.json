@@ -3,7 +3,7 @@
   "version": "10.0.1",
   "description": "JavaScript module to use black or white font according to the given background color",
   "scripts": {
-    "build": "tsc",
+    "build": "npx tsc",
     "prepare" : "npm run build",
     "prepublishOnly" : "npm test",
     "test": "jest"
