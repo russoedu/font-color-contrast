@@ -3,7 +3,7 @@
   "version": "10.0.1",
   "description": "JavaScript module to use black or white font according to the given background color",
   "scripts": {
-    "build": "tsc",
+    "build": "npx -p typescript tsc",
     "prepare" : "npm run build",
     "prepublishOnly" : "npm test",
     "test": "jest"
@@ -31,9 +31,6 @@
   "files": [
     "lib/**/*"
   ],
-  "dependencies": {
-    "typescript": "^4.4.4"
-  },
   "devDependencies": {
     "@types/jest": "^27.0.2",
     "@types/node": "^16.11.6",
@@ -48,6 +45,7 @@
     "eslint-plugin-standard": "^5.0.0",
     "jest": "^27.3.1",
     "jest-junit": "^13.0.0",
-    "ts-jest": "^27.0.7"
+    "ts-jest": "^27.0.7",
+    "typescript": "^4.4.4"
   }
 }
