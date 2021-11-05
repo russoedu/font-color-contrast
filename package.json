@@ -29,7 +29,7 @@
     "lib": "lib"
   },
   "files": [
-    "lib/**/*"
+    "lib"
   ],
   "devDependencies": {
     "@types/jest": "^27.0.2",
