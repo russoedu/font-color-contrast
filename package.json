@@ -1,14 +1,11 @@
 {
   "name": "font-color-contrast",
-  "version": "10.0.1",
+  "version": "10.1.0",
   "description": "JavaScript module to use black or white font according to the given background color",
-  "main": "lib/index.js",
-  "directories": {
-    "lib": "lib"
-  },
   "scripts": {
     "build": "tsc",
-    "install": "tsc",
+    "prepare" : "npm run build",
+    "prepublishOnly" : "npm test",
     "test": "jest"
   },
   "author": "Eduardo Russo",
@@ -26,6 +23,13 @@
     "contrast",
     "font",
     "background"
+  ],
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "files": [
+    "lib"
   ],
   "devDependencies": {
     "@types/jest": "^27.0.2",
