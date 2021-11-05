@@ -143,3 +143,6 @@ Included the optional threshold parameter (thanks, [franciscohanna92](https://gi
 
 ### 10.0.1
 Changed target to ES2015
+
+### 10.1.0
+Fixed package instalation from the new TS version
