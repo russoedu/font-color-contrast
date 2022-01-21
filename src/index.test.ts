@@ -147,4 +147,19 @@ describe('fontColorContrast', () => {
     expect(fontColorContrast(red, green, blue, 0.49)).toBe('#000000')
     expect(fontColorContrast(red, green, blue, 1)).toBe('#ffffff')
   })
+
+  test('default response for NaN', () => {
+    const font = fontColorContrast(NaN as number)
+    expect(font).toBe('#ffffff')
+  })
+
+  test('default response for NaN array', () => {
+    const font = fontColorContrast([NaN as number, NaN as number, NaN as number])
+    expect(font).toBe('#ffffff')
+  })
+
+  test('default response for string resulting in NaN', () => {
+    const font = fontColorContrast('sss')
+    expect(font).toBe('#ffffff')
+  })
 })

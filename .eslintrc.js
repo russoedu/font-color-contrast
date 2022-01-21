@@ -4,18 +4,18 @@ module.exports = {
   env:    {
     es2021: true,
     node:   true,
-    jest:   true
+    jest:   true,
   },
   extends: [
     'plugin:@typescript-eslint/recommended', // Out of the box Typescript rules
-    'standard' // Out of the box StandardJS rules
+    'standard', // Out of the box StandardJS rules
   ],
   plugins: [
-    '@typescript-eslint' // Let's us override rules below.
+    '@typescript-eslint', // Let's us override rules below.
   ],
   parserOptions: {
     ecmaVersion: 2021,
-    sourceType:  'module'
+    sourceType:  'module',
   },
   rules: {
     'no-redeclare':              'off',
@@ -27,28 +27,28 @@ module.exports = {
     'no-extra-boolean-cast':     'off',
     'object-curly-spacing':      [
       2,
-      'always'
+      'always',
     ],
     'no-useless-escape': 'off',
     semi:                [
       'error',
-      'never'
+      'never',
     ],
     'comma-dangle': [
       'error',
       {
-        arrays:    'only-multiline',
-        objects:   'only-multiline',
-        imports:   'never',
-        exports:   'never',
-        functions: 'never'
-      }
+        arrays:    'always-multiline',
+        objects:   'always-multiline',
+        imports:   'always-multiline',
+        exports:   'always-multiline',
+        functions: 'only-multiline',
+      },
     ],
     'key-spacing': [
       'error',
       {
-        align: 'value'
-      }
+        align: 'value',
+      },
     ],
     'no-unused-vars':                                    'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
@@ -56,9 +56,9 @@ module.exports = {
     '@typescript-eslint/no-unused-vars':                 [
       'error',
       {
-        varsIgnorePattern: '^env$|^_.+?'
-      }
+        varsIgnorePattern: '^env$|^_.+?',
+      },
     ],
-    'multiline-comment-style': ['error', 'starred-block']
-  }
+    'multiline-comment-style': ['error', 'starred-block'],
+  },
 }

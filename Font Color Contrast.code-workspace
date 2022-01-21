@@ -1,0 +1,41 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"files.exclude": {
+      ".editorconfig": true,
+      ".eslintignore": true,
+      ".gitignore": true,
+      "node_modules": true,
+      "package-lock.json": true,
+      "tsconfig.json": true,
+      ".eslintrc.js": true,
+      ".npmignore": true,
+      "jest.config.js": true
+  },
+  "favorites.resources": [
+      "package.json",
+      "./src/index.ts",
+      "./src/index.test.ts"
+  ]
+	},
+  "launch": {
+    "configurations": [
+      {
+        "name": "Build",
+        "command": "npm run build",
+        "request": "launch",
+        "type": "node-terminal"
+      },
+      {
+        "name": "Test",
+        "command": "npm test",
+        "request": "launch",
+        "type": "node-terminal"
+      }
+    ]
+  }
+}

@@ -1,6 +1,6 @@
 {
   "name": "font-color-contrast",
-  "version": "10.1.0",
+  "version": "10.2.0",
   "description": "JavaScript module to use black or white font according to the given background color",
   "scripts": {
     "build": "tsc",
