@@ -1,34 +1,129 @@
 type ColorIntensity = number | string
-
+enum ParamType {
+  HEX,
+  ARRAY,
+  RGB,
+  ERROR,
+}
 export class FontColorContrast {
   red = 0
   green = 0
   blue = 0
+
   /**
    * Contrast threshold to control the resulting font color, float values from 0 to 1. Default is 0.5
    */
   threshold = 0.5
-  #threshold: number|undefined
 
   getColor (hexColorOrRedOrArray: string | number | number[], greenOrThreshold?: number, blue?: number, threshold?: number) {
-    if (blue !== undefined) {
-      // Color is set as RGB on each param
-      this.setColorsFromNumbers(hexColorOrRedOrArray as number, greenOrThreshold as number, blue as number, threshold)
-    } else if (Array.isArray(hexColorOrRedOrArray)) {
-      // Color is set as an RGB array
-      this.setColorsFromArray(hexColorOrRedOrArray as number[], greenOrThreshold)
-    } else if (
-      typeof hexColorOrRedOrArray === 'string' ||
-        (typeof hexColorOrRedOrArray === 'number' && !isNaN(hexColorOrRedOrArray))
-    ) {
-      // Color is set on the first param as a number or a string
-      this.setColorsFromHex(hexColorOrRedOrArray as ColorIntensity, greenOrThreshold)
-    } else {
-      // Not a color, respond with white color
-      return '#ffffff'
+    const type = FontColorContrast.getParamType(hexColorOrRedOrArray, greenOrThreshold, blue, threshold)
+
+    switch (type) {
+      case ParamType.RGB:
+        this.setColorsFromNumbers(hexColorOrRedOrArray as number, greenOrThreshold as number, blue as number, threshold)
+        break
+      case ParamType.ARRAY:
+        this.setColorsFromArray(hexColorOrRedOrArray as number[], greenOrThreshold)
+        break
+      case ParamType.HEX:
+        this.setColorsFromHex(hexColorOrRedOrArray as ColorIntensity, greenOrThreshold)
+        break
+      default:
+        return '#ffffff'
     }
-    if (this.#threshold !== undefined) this.threshold = this.#threshold
+
     return this.contrastFromHSP()
+  }
+
+  /**
+   * Checks the param type
+   * @param hexColorOrRedOrArray
+   * @param greenOrThreshold
+   * @param blue
+   * @param threshold
+   * @returns The param Type
+   */
+  static getParamType (hexColorOrRedOrArray: string | number | number[], greenOrThreshold?: number, blue?: number, threshold?: number) {
+    if (FontColorContrast.isRgb(hexColorOrRedOrArray, greenOrThreshold, blue)) return ParamType.RGB
+    if (FontColorContrast.isHex(hexColorOrRedOrArray, blue, threshold)) return ParamType.HEX
+    if (FontColorContrast.isArray(hexColorOrRedOrArray)) return ParamType.ARRAY
+    return ParamType.ERROR
+  }
+
+  /**
+   * Checks if the color is set as RGB on each param
+   * @returns True if color is set as RGB on each param
+   */
+  static isRgb (hexColorOrRedOrArray: string | number | number[], greenOrThreshold?: number, blue?: number) {
+    return (
+      hexColorOrRedOrArray !== undefined &&
+      hexColorOrRedOrArray !== null &&
+      greenOrThreshold !== undefined &&
+      greenOrThreshold !== null &&
+      blue !== undefined &&
+      blue !== null
+    )
+  }
+
+  /**
+   * Checks if color is set on the first param as a number or a string
+   * @returns True if color is set on the first param as a number or a string
+   */
+  static isHex (hexColorOrRedOrArray: string | number | number[], blue?: number, threshold?: number) {
+    return (
+      (typeof hexColorOrRedOrArray === 'string' || typeof hexColorOrRedOrArray === 'number') &&
+        (blue === undefined || blue === null) &&
+        (threshold === undefined || threshold === null)
+    )
+  }
+
+  /**
+   * Checks if color is set as an RGB array
+   * @returns True if color is set as an RGB array
+   */
+  static isArray (hexColorOrRedOrArray: string | number | number[]) {
+    return (
+      Array.isArray(hexColorOrRedOrArray) &&
+      hexColorOrRedOrArray.length === 3 &&
+      typeof hexColorOrRedOrArray[0] === 'number' &&
+      typeof hexColorOrRedOrArray[1] === 'number' &&
+      typeof hexColorOrRedOrArray[2] === 'number'
+
+    )
+  }
+
+  /**
+   * Converts a color array or separated in RGB to the respective RGB values
+   * @param red The color red
+   * @param green The color green
+   * @param blue The color blue
+   * @param threshold The threshold
+   * @example All these examples produces the same value
+   * arrayOrRgbToRGB(0, 0xcc, 153)
+   * arrayOrRgbToRGB(0x0, 0xcc, 153)
+   * arrayOrRgbToRGB(0, 204, 0x99)
+   */
+  setColorsFromNumbers (red: number, green: number, blue: number, threshold?: number): void {
+    this.red = FontColorContrast.getValidNumber(red)
+    this.green = FontColorContrast.getValidNumber(green)
+    this.blue = FontColorContrast.getValidNumber(blue)
+    this.setThreshold(threshold)
+  }
+
+  /**
+   * Converts a color array or separated in RGB to the respective RGB values
+   * @param colorArray The RGB array
+   * @param threshold The threshold
+   * @example All these examples produces the same value
+   * arrayOrRgbToRGB([0, 0xcc, 153])
+   * arrayOrRgbToRGB([0x0, 0xcc, 153])
+   * arrayOrRgbToRGB([0, 204, 0x99])
+   */
+  setColorsFromArray (colorArray: number[], threshold?: number): void {
+    this.red = FontColorContrast.getValidNumber(colorArray[0])
+    this.green = FontColorContrast.getValidNumber(colorArray[1])
+    this.blue = FontColorContrast.getValidNumber(colorArray[2])
+    this.setThreshold(threshold)
   }
 
   /**
@@ -78,41 +173,31 @@ export class FontColorContrast {
         this.blue = FontColorContrast.hexToDec(color.substring(4, 6))
         break
     }
-    this.#threshold = threshold
+    this.setThreshold(threshold)
   }
 
   /**
-   * Converts a color array or separated in RGB to the respective RGB values
-   * @param colorArray The RGB array
-   * @param threshold The threshold
-   * @example All these examples produces the same value
-   * arrayOrRgbToRGB([0, 0xcc, 153])
-   * arrayOrRgbToRGB([0x0, 0xcc, 153])
-   * arrayOrRgbToRGB([0, 204, 0x99])
+   * Sets the threshold to the passed value (if valid - less than or equal 1) or the dafault (0.5)
+   * @param threshold The passed threshold or undefined if not passed
    */
-  setColorsFromArray (colorArray: number[], threshold?: number): void {
-    this.red = isNaN(colorArray[0]) ? 0 : colorArray[0]
-    this.green = isNaN(colorArray[1]) ? 0 : colorArray[1]
-    this.blue = isNaN(colorArray[2]) ? 0 : colorArray[2]
-    this.#threshold = threshold
+  setThreshold (threshold?: number) {
+    const def = 0.5
+    const max = 1
+
+    if (threshold === undefined) this.threshold = def
+    else this.threshold = FontColorContrast.getValidNumber(threshold, max, def)
   }
 
   /**
-   * Converts a color array or separated in RGB to the respective RGB values
-   * @param red The color red
-   * @param green The color green
-   * @param blue The color blue
-   * @param threshold The threshold
-   * @example All these examples produces the same value
-   * arrayOrRgbToRGB(0, 0xcc, 153)
-   * arrayOrRgbToRGB(0x0, 0xcc, 153)
-   * arrayOrRgbToRGB(0, 204, 0x99)
+   * Checks if the value is between 0 and max. If not, returns 0
+   * @param value The color or threshold to be checked
+   * @param max The maximum value (default = 255)
+   * @param responseIfError The response in case the number is outside the expected values
+   * @returns
    */
-  setColorsFromNumbers (red: number, green: number, blue: number, threshold?: number): void {
-    this.red = red
-    this.green = green
-    this.blue = blue
-    this.#threshold = threshold
+  static getValidNumber (value: number, max = 255, responseIfError = 0): number {
+    if (isNaN(value) || !isFinite(value) || value < 0 || value > max) return responseIfError
+    return value
   }
 
   /**
@@ -127,10 +212,20 @@ export class FontColorContrast {
     const hasHash = hashRegEx.test(hexColor as string)
     const hasHex = hexRegEx.test(hexColor as string)
 
-    if (typeof hexColor === 'number') return hexColor.toString(16)
-    else if (hasHash) return hexColor.replace(hashRegEx, '')
-    else if (hasHex) return hexColor.replace(hexRegEx, '')
-    else return hexColor
+    if (typeof hexColor === 'number') {
+      if (isNaN(hexColor) || !isFinite(hexColor) || hexColor < 0 || hexColor > 0xffffff) return '000'
+      return hexColor.toString(16)
+    } else {
+      let clean = hexColor
+      if (hasHash) {
+        clean = hexColor.replace(hashRegEx, '')
+      } else if (hasHex) {
+        clean = hexColor.replace(hexRegEx, '')
+      }
+      const numColor = Number(`0x${clean}`)
+      if (isNaN(numColor) || !isFinite(numColor) || numColor < 0 || numColor > 0xffffff) return '000'
+      return clean
+    }
   }
 
   /**
@@ -139,8 +234,12 @@ export class FontColorContrast {
    * @returns The integer value
    */
   static hexToDec (hexString: string): number {
-    const parsed = parseInt(hexString, 16)
-    return isNaN(parsed) ? 0 : parsed
+    const hexRegex = /^[a-fA-F0-9]{2}$/
+    const hexExec = hexRegex.exec(hexString)
+    if (hexExec) {
+      return FontColorContrast.getValidNumber(parseInt(hexString, 16))
+    }
+    return 0
   }
 
   /**
