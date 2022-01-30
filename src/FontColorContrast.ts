@@ -71,12 +71,7 @@ export class FontColorContrast {
    * @returns True if color is a hex string
    */
   isHexString () {
-    const cleanRegEx = /(#|\s)/ig
-
-    if (typeof this.#hexColorOrRedOrArray !== 'string') return false
-
-    const cleanString = (this.#hexColorOrRedOrArray).replace(cleanRegEx, '')
-    const hexNum = Number('0x' + cleanString)
+    const [cleanString, hexNum] = this.getCleanStringAndHexNum()
 
     if (FontColorContrast.isValidNumber(hexNum, NumberType.RGB) &&
         FontColorContrast.isValidNumber(this.#greenOrThreshold, NumberType.THRESHOLD) &&
@@ -127,10 +122,10 @@ export class FontColorContrast {
    * arrayOrRgbToRGB(0, 204, 0x99)
    */
   setColorsFromRgbNumbers (): void {
-    this.red = FontColorContrast.getValidNumber(this.#hexColorOrRedOrArray as number)
-    this.green = FontColorContrast.getValidNumber(this.#greenOrThreshold as number)
-    this.blue = FontColorContrast.getValidNumber(this.#blue as number)
-    this.setThreshold(this.#threshold)
+    this.red = this.#hexColorOrRedOrArray as number
+    this.green = this.#greenOrThreshold as number
+    this.blue = this.#blue as number
+    this.setThreshold(this.#threshold as number)
   }
 
   /**
@@ -143,10 +138,10 @@ export class FontColorContrast {
    * arrayOrRgbToRGB([0, 204, 0x99])
    */
   setColorsFromArray (): void {
-    this.red = FontColorContrast.getValidNumber((this.#hexColorOrRedOrArray as number[])[0])
-    this.green = FontColorContrast.getValidNumber((this.#hexColorOrRedOrArray as number[])[1])
-    this.blue = FontColorContrast.getValidNumber((this.#hexColorOrRedOrArray as number[])[2])
-    this.setThreshold(this.#greenOrThreshold)
+    this.red = (this.#hexColorOrRedOrArray as number[])[0]
+    this.green = (this.#hexColorOrRedOrArray as number[])[1]
+    this.blue = (this.#hexColorOrRedOrArray as number[])[2]
+    this.setThreshold(this.#greenOrThreshold as number)
   }
 
   /**
@@ -183,7 +178,7 @@ export class FontColorContrast {
         this.blue = 0
         break
     }
-    this.setThreshold(this.#greenOrThreshold)
+    this.setThreshold(this.#greenOrThreshold as number)
   }
 
   /**
@@ -229,19 +224,15 @@ export class FontColorContrast {
         this.blue = FontColorContrast.hexToDec(color.substring(4, 6))
         break
     }
-    this.setThreshold(this.#greenOrThreshold)
+    this.setThreshold(this.#greenOrThreshold as number)
   }
 
   /**
    * Sets the threshold to the passed value (if valid - less than or equal 1) or the dafault (0.5)
    * @param threshold The passed threshold or undefined if not passed
    */
-  setThreshold (threshold?: number) {
-    const def = 0.5
-    const max = 1
-
-    if (threshold === undefined) this.threshold = def
-    else this.threshold = FontColorContrast.getValidNumber(threshold, max, def)
+  setThreshold (threshold: number) {
+    this.threshold = threshold || this.threshold
   }
 
   /**
@@ -313,6 +304,22 @@ export class FontColorContrast {
       num >= 0 &&
       num <= numberType
     )
+  }
+
+  /**
+   * Verifies if a string is a valig string to be used as a color and if true, returns the correspondent hex number
+   * @returns Array with an empty string and false if the string is invalid or an array with the clean string and the converted string number]
+   */
+  getCleanStringAndHexNum (): ['', false]|[string, number] {
+    if (typeof this.#hexColorOrRedOrArray !== 'string') return ['', false]
+
+    const cleanRegEx = /(#|\s)/ig
+    const cleanString = (this.#hexColorOrRedOrArray).replace(cleanRegEx, '')
+    const hexNum = Number('0x' + cleanString)
+
+    if (cleanString.length !== 3 && cleanString.length !== 6) return ['', false]
+
+    return [cleanString, hexNum]
   }
 
   /**

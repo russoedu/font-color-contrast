@@ -184,7 +184,7 @@ describe('isHexString()', () => {
     jest.restoreAllMocks()
   })
 
-  test('functions are called and string is converted correctly', () => {
+  test('result for valid 3 chars string', () => {
     const fcc = new FontColorContrast('fff', 0.6, null as unknown as undefined)
 
     expect(fcc.isHexString()).toBeTruthy()
@@ -196,28 +196,51 @@ describe('isHexString()', () => {
     expect(isNotSet).toHaveBeenNthCalledWith(2, undefined)
   })
 
-  test('string is converted correctly with hash', () => {
+  test('result for valid 3 chars string with hash', () => {
     const fcc = new FontColorContrast('#fff', 0.6)
 
     expect(fcc.isHexString()).toBeTruthy()
     expect(isValidNumber).toHaveBeenNthCalledWith(1, 0xfff, NumberType.RGB)
+    expect(isValidNumber).toHaveBeenNthCalledWith(2, 0.6, NumberType.THRESHOLD)
   })
 
-  test('string is converted correctly with hash and space', () => {
-    const fcc = new FontColorContrast('# fff', 0.6)
+  test('result for valid 3 chars string with hash and space', () => {
+    const fcc = new FontColorContrast('# 000', 0.6)
 
     expect(fcc.isHexString()).toBeTruthy()
-    expect(isValidNumber).toHaveBeenNthCalledWith(1, 0xfff, NumberType.RGB)
+    expect(isValidNumber).toHaveBeenNthCalledWith(1, 0x000, NumberType.RGB)
   })
 
-  test('string is converted to NaN', () => {
-    const fcc = new FontColorContrast('text')
+  test('result for string color with nor 3 or 6 chars', () => {
+    const fcc = new FontColorContrast('#fcc3')
+
+    expect(fcc.isHexString()).toBeFalsy()
+    expect(isValidNumber).toHaveBeenNthCalledWith(1, false, NumberType.RGB)
+  })
+
+  test('result for invalid string color', () => {
+    const fcc = new FontColorContrast('tex')
 
     expect(fcc.isHexString()).toBeFalsy()
     expect(isValidNumber).toHaveBeenNthCalledWith(1, NaN, NumberType.RGB)
   })
 
-  test('fail because blue is set', () => {
+  test('result for invalid threshold', () => {
+    const fcc = new FontColorContrast('fcc', 10)
+
+    expect(fcc.isHexString()).toBeFalsy()
+    expect(isValidNumber).toHaveBeenNthCalledWith(1, 0xfcc, NumberType.RGB)
+    expect(isValidNumber).toHaveBeenNthCalledWith(2, 10, NumberType.THRESHOLD)
+  })
+
+  test('result for not a string', () => {
+    const fcc = new FontColorContrast(45)
+
+    expect(fcc.isHexString()).toBeFalsy()
+    expect(isValidNumber).toHaveBeenNthCalledWith(1, false, NumberType.RGB)
+  })
+
+  test('result when blue is set', () => {
     const fcc = new FontColorContrast('#FC0523', 0.5, 0xff)
 
     expect(fcc.isHexString()).toBeFalsy()
@@ -226,7 +249,7 @@ describe('isHexString()', () => {
     expect(isNotSet).toHaveBeenCalledWith(0xff)
   })
 
-  test('fail because threshold is set', () => {
+  test('result when threshold is set', () => {
     const fcc = new FontColorContrast('#FC0523', 0.5, undefined, 0xff)
 
     expect(fcc.isHexString()).toBeFalsy()
@@ -237,190 +260,220 @@ describe('isHexString()', () => {
   })
 })
 
-/*
- * describe('getColor2()', () => {
- *   let setColorsFromRgbNumbers: jest.SpyInstance<any, unknown[]>
- *   let setColorsFromHexString: jest.SpyInstance<any, unknown[]>
- *   let setColorsFromNumber: jest.SpyInstance<any, unknown[]>
- *   let setColorsFromArray: jest.SpyInstance<any, unknown[]>
- */
+describe('isNumber()', () => {
+  let isValidNumber: jest.SpyInstance<boolean, [num: any, numberType?: NumberType]>
+  let isNotSet: jest.SpyInstance<boolean, [value: any]>
 
-/*
- *   beforeEach(() => {
- *     setColorsFromRgbNumbers = jest
- *       .spyOn(FontColorContrast.prototype, 'setColorsFromRgbNumbers')
- *       .mockImplementation(() => null)
- *     setColorsFromHexString = jest
- *       .spyOn(FontColorContrast.prototype, 'setColorsFromHexString')
- *       .mockImplementation(() => null)
- *     setColorsFromNumber = jest
- *       .spyOn(FontColorContrast.prototype, 'setColorsFromNumber')
- *       .mockImplementation(() => null)
- *     setColorsFromArray = jest
- *       .spyOn(FontColorContrast.prototype, 'setColorsFromArray')
- *       .mockImplementation(() => null)
- *     jest
- *       .spyOn(FontColorContrast.prototype, 'contrastFromHSP')
- *       .mockImplementation(() => '#000000')
- *   })
- */
+  beforeEach(() => {
+    isValidNumber = jest
+      .spyOn(FontColorContrast, 'isValidNumber')
 
-/*
- *   afterEach(() => {
- *     jest.resetAllMocks()
- *   })
- */
+    isNotSet = jest
+      .spyOn(FontColorContrast, 'isNotSet')
+  })
 
-/*
- *   afterAll(() => {
- *     jest.restoreAllMocks()
- *   })
- */
+  afterEach(() => {
+    jest.restoreAllMocks()
+  })
 
-/*
- *   test('array of colors type were identified correctly', () => {
- *     const fcc1 = new FontColorContrast([10, 20, 5000], 0.3)
- *     fcc1.getColor()
- *     expect(setColorsFromArray).toHaveBeenCalledTimes(1)
- */
+  test('result for valid number and threshold', () => {
+    const fcc = new FontColorContrast(0xffffff, 0.6, null as unknown as undefined)
 
-/*
- *     const fcc2 = new FontColorContrast([-10, NaN, Infinity], 15)
- *     fcc2.getColor()
- *     expect(setColorsFromArray).toHaveBeenCalledTimes(2)
- *   })
- */
+    expect(fcc.isNumber()).toBeTruthy()
+    expect(isValidNumber).toHaveBeenCalledTimes(2)
+    expect(isValidNumber).toHaveBeenNthCalledWith(1, 0xffffff, NumberType.RGB)
+    expect(isValidNumber).toHaveBeenNthCalledWith(2, 0.6, NumberType.THRESHOLD)
+    expect(isNotSet).toHaveBeenCalledTimes(2)
+    expect(isNotSet).toHaveBeenNthCalledWith(1, null)
+    expect(isNotSet).toHaveBeenNthCalledWith(2, undefined)
+  })
 
-/*
- *   test('hex string colors type were identified correctly', () => {
- *     const fcc1 = new FontColorContrast('#b75301')
- *     fcc1.getColor()
- *     expect(setColorsFromHexString).toHaveBeenCalledTimes(1)
- */
+  test('result for invalid number', () => {
+    const fcc = new FontColorContrast(0x1000000)
 
-/*
- *     const fcc2 = new FontColorContrast('#BF4', 0.2)
- *     fcc2.getColor()
- *     expect(setColorsFromHexString).toHaveBeenCalledTimes(2)
- */
+    expect(fcc.isNumber()).toBeFalsy()
+    expect(isValidNumber).toHaveBeenNthCalledWith(1, 0x1000000, NumberType.RGB)
+  })
 
-/*
- *     const fcc3 = new FontColorContrast('# b75301')
- *     fcc3.getColor()
- *     expect(setColorsFromHexString).toHaveBeenCalledTimes(3)
- */
+  test('result for invalid threshold', () => {
+    const fcc = new FontColorContrast(0, 10)
 
-/*
- *     const fcc4 = new FontColorContrast('# BF4', 0.2)
- *     fcc4.getColor()
- *     expect(setColorsFromHexString).toHaveBeenCalledTimes(4)
- *   })
- */
+    expect(fcc.isNumber()).toBeFalsy()
+    expect(isValidNumber).toHaveBeenNthCalledWith(1, 0, NumberType.RGB)
+    expect(isValidNumber).toHaveBeenNthCalledWith(2, 10, NumberType.THRESHOLD)
+  })
 
-/*
- *   test('hex number colors type were identified correctly', () => {
- *     const fcc1 = new FontColorContrast(0xFFFFFF)
- *     fcc1.getColor()
- *     expect(setColorsFromNumber).toHaveBeenCalledTimes(1)
- */
+  test('result for a string', () => {
+    const fcc = new FontColorContrast('45')
 
-/*
- *     const fcc2 = new FontColorContrast(0, 1)
- *     fcc2.getColor()
- *     expect(setColorsFromNumber).toHaveBeenCalledTimes(2)
- */
+    expect(fcc.isNumber()).toBeFalsy()
+    expect(isValidNumber).toHaveBeenNthCalledWith(1, '45', NumberType.RGB)
+  })
 
-/*
- *     const fcc3 = new FontColorContrast(3060, 0)
- *     fcc3.getColor()
- *     expect(setColorsFromNumber).toHaveBeenCalledTimes(3)
- *   })
- */
+  test('result for NaN', () => {
+    const fcc = new FontColorContrast(Number('test'))
 
-/*
- *   test('invalid params should not call any conversion', () => {
- *     const fcc1 = new FontColorContrast(['asd', 'fgv', 123] as number[])
- *     fcc1.getColor()
- */
+    expect(fcc.isNumber()).toBeFalsy()
+    expect(isValidNumber).toHaveBeenNthCalledWith(1, NaN, NumberType.RGB)
+  })
 
-/*
- *     const fcc2 = new FontColorContrast([0, 2, 3, 4])
- *     fcc2.getColor()
- */
+  test('result for Infinity', () => {
+    const fcc = new FontColorContrast(Infinity)
 
-/*
- *     const fcc3 = new FontColorContrast({ test: 3 } as unknown as number, 0)
- *     fcc3.getColor()
- */
+    expect(fcc.isNumber()).toBeFalsy()
+    expect(isValidNumber).toHaveBeenNthCalledWith(1, Infinity, NumberType.RGB)
+  })
 
-/*
- *     const fcc4 = new FontColorContrast(new Error('error') as unknown as string)
- *     fcc4.getColor()
- */
+  test('result when blue is set', () => {
+    const fcc = new FontColorContrast(0xFC0523, 0.5, 0xff)
 
-/*
- *     const fcc5 = new FontColorContrast(1, undefined, 3, 0)
- *     fcc5.getColor()
- */
+    expect(fcc.isNumber()).toBeFalsy()
+    expect(isValidNumber).toHaveBeenNthCalledWith(1, 0xFC0523, NumberType.RGB)
+    expect(isValidNumber).toHaveBeenNthCalledWith(2, 0.5, NumberType.THRESHOLD)
+    expect(isNotSet).toHaveBeenCalledWith(0xff)
+  })
 
-/*
- *     const fcc6 = new FontColorContrast(1, 2, undefined, 0)
- *     fcc6.getColor()
- */
+  test('result when threshold is set', () => {
+    const fcc = new FontColorContrast(0, 0.5, undefined, 0xff)
 
-/*
- *     const fcc7 = new FontColorContrast(null as unknown as number, 7, 3, 0)
- *     fcc7.getColor()
- */
+    expect(fcc.isNumber()).toBeFalsy()
+    expect(isValidNumber).toHaveBeenNthCalledWith(1, 0, NumberType.RGB)
+    expect(isValidNumber).toHaveBeenNthCalledWith(2, 0.5, NumberType.THRESHOLD)
+    expect(isNotSet).toHaveBeenNthCalledWith(1, undefined)
+    expect(isNotSet).toHaveBeenNthCalledWith(2, 0xff)
+  })
+})
 
-/*
- *     const fcc8 = new FontColorContrast('hello')
- *     fcc8.getColor()
- */
+describe('isArray()', () => {
+  let isValidNumber: jest.SpyInstance<boolean, [num: any, numberType?: number]>
+  let isNotSet: jest.SpyInstance<boolean, [num: any]>
+  beforeEach(() => {
+    isValidNumber = jest
+      .spyOn(FontColorContrast, 'isValidNumber')
 
-/*
- *     const fcc9 = new FontColorContrast('#FFCC')
- *     fcc9.getColor()
- */
+    isNotSet = jest
+      .spyOn(FontColorContrast, 'isNotSet')
+  })
 
-/*
- *     const fcc10 = new FontColorContrast('0XFFF')
- *     fcc10.getColor()
- */
+  afterEach(() => {
+    jest.restoreAllMocks()
+  })
 
-/*
- *     const fcc11 = new FontColorContrast('#1000000')
- *     fcc11.getColor()
- */
+  test('result for valid array with threshold', () => {
+    const fcc = new FontColorContrast([10, 0xff, 255], 0.3)
 
-/*
- *     const fcc12 = new FontColorContrast(NaN, 0)
- *     fcc12.getColor()
- */
+    expect(fcc.isArray()).toBeTruthy()
+    expect(isValidNumber).toHaveBeenCalledTimes(4)
+    expect(isValidNumber).toHaveBeenNthCalledWith(1, 10)
+    expect(isValidNumber).toHaveBeenNthCalledWith(2, 255)
+    expect(isValidNumber).toHaveBeenNthCalledWith(3, 255)
+    expect(isValidNumber).toHaveBeenNthCalledWith(4, 0.3, NumberType.THRESHOLD)
+  })
 
-/*
- *     const fcc13 = new FontColorContrast(Infinity, 0)
- *     fcc13.getColor()
- */
+  test('result for valid array without threshold', () => {
+    const fcc = new FontColorContrast([10, 0xff, 255])
 
-/*
- *     const fcc14 = new FontColorContrast(-1, 0)
- *     fcc14.getColor()
- */
+    expect(fcc.isArray()).toBeTruthy()
+    expect(isValidNumber).toHaveBeenCalledTimes(4)
+    expect(isValidNumber).toHaveBeenNthCalledWith(1, 10)
+    expect(isValidNumber).toHaveBeenNthCalledWith(2, 255)
+    expect(isValidNumber).toHaveBeenNthCalledWith(3, 255)
+    expect(isValidNumber).toHaveBeenNthCalledWith(4, undefined, NumberType.THRESHOLD)
+    expect(isNotSet).toHaveBeenNthCalledWith(1, undefined)
+    expect(isNotSet).toHaveBeenNthCalledWith(2, undefined)
+  })
 
-/*
- *     const fcc15 = new FontColorContrast(0xFFFFFF + 1, 0)
- *     fcc15.getColor()
- */
+  test('result for invalid number', () => {
+    const fcc = new FontColorContrast([0, 0xff, 0x100])
 
-/*
- *     expect(setColorsFromArray).toHaveBeenCalledTimes(0)
- *     expect(setColorsFromHexString).toHaveBeenCalledTimes(0)
- *     expect(setColorsFromNumber).toHaveBeenCalledTimes(0)
- *     expect(setColorsFromRgbNumbers).toHaveBeenCalledTimes(0)
- *   })
- * })
- */
+    expect(fcc.isArray()).toBeFalsy()
+    expect(isValidNumber).toHaveBeenNthCalledWith(1, 0)
+    expect(isValidNumber).toHaveBeenNthCalledWith(2, 0xff)
+    expect(isValidNumber).toHaveBeenNthCalledWith(3, 0x100)
+  })
+
+  test('result for invalid threshold', () => {
+    const fcc = new FontColorContrast([0, 0, 0], 10)
+
+    expect(fcc.isArray()).toBeFalsy()
+    expect(isValidNumber).toHaveBeenNthCalledWith(4, 10, NumberType.THRESHOLD)
+  })
+
+  test('result for an array with string', () => {
+    const fcc = new FontColorContrast(['45' as unknown as number, 0, 0])
+
+    expect(fcc.isArray()).toBeFalsy()
+    expect(isValidNumber).toHaveBeenNthCalledWith(1, '45')
+  })
+
+  test('result for NaN', () => {
+    const fcc = new FontColorContrast([Number('test'), 0, 5])
+
+    expect(fcc.isArray()).toBeFalsy()
+    expect(isValidNumber).toHaveBeenNthCalledWith(1, NaN)
+  })
+
+  test('result for Infinity', () => {
+    const fcc = new FontColorContrast([Infinity, 0, 3])
+
+    expect(fcc.isArray()).toBeFalsy()
+    expect(isValidNumber).toHaveBeenNthCalledWith(1, Infinity)
+  })
+
+  test('result when blue is set', () => {
+    const fcc = new FontColorContrast([0xfc, 0xff, 0x56], 0.5, 0xff)
+
+    expect(fcc.isArray()).toBeFalsy()
+    expect(isNotSet).toHaveBeenCalledWith(0xff)
+  })
+
+  test('result when threshold is set', () => {
+    const fcc = new FontColorContrast([0, 0xff, 0xc5], 0.5, undefined, 0xff)
+
+    expect(fcc.isArray()).toBeFalsy()
+    expect(isNotSet).toHaveBeenNthCalledWith(2, 0xff)
+  })
+})
+
+describe('setColorsFromRgbNumbers()', () => {
+  test('colors are set and threshold is the default', () => {
+    const fcc = new FontColorContrast(5, 10, 0xff)
+    fcc.setColorsFromRgbNumbers()
+    expect(fcc.red).toBe(5)
+    expect(fcc.green).toBe(10)
+    expect(fcc.blue).toBe(255)
+    expect(fcc.threshold).toBe(0.5)
+  })
+
+  test('colors and threshold are set', () => {
+    const fcc = new FontColorContrast(5, 10, 0xff, 0.3)
+    fcc.setColorsFromRgbNumbers()
+    expect(fcc.red).toBe(5)
+    expect(fcc.green).toBe(10)
+    expect(fcc.blue).toBe(255)
+    expect(fcc.threshold).toBe(0.3)
+  })
+})
+
+describe('setColorsFromArray()', () => {
+  test('colors are set and threshold is the default', () => {
+    const fcc = new FontColorContrast([5, 10, 0xff])
+    fcc.setColorsFromArray()
+    expect(fcc.red).toBe(5)
+    expect(fcc.green).toBe(10)
+    expect(fcc.blue).toBe(255)
+    expect(fcc.threshold).toBe(0.5)
+  })
+
+  test('colors and threshold are set', () => {
+    const fcc = new FontColorContrast([5, 10, 0xff], 0.3)
+    fcc.setColorsFromArray()
+    expect(fcc.red).toBe(5)
+    expect(fcc.green).toBe(10)
+    expect(fcc.blue).toBe(255)
+    expect(fcc.threshold).toBe(0.3)
+  })
+})
 
 /*
  * describe('setColorsFromNumbers()', () => {
