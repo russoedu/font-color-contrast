@@ -1,11 +1,5 @@
 /* eslint-disable no-new-wrappers */
-import { FontColorContrast } from './FontColorContrast'
-
-enum NumberType {
-  COLOR = 0xff,
-  RGB = 0xffffff,
-  THRESHOLD = 1,
-}
+import { FontColorContrast, NumberType } from './FontColorContrast'
 
 describe('constructor()', () => {
   test('instance is created', () => {
@@ -125,7 +119,7 @@ describe('getColor()', () => {
 })
 
 describe('isRgb()', () => {
-  let isValidNumber: jest.SpyInstance<boolean, [num: any, numberType?: number]>
+  let isValidNumber: jest.SpyInstance<boolean, [num: any, numberType: number]>
 
   beforeEach(() => {
     isValidNumber = jest
@@ -141,9 +135,9 @@ describe('isRgb()', () => {
 
     expect(fcc.isRgb()).toBeTruthy()
     expect(isValidNumber).toHaveBeenCalledTimes(4)
-    expect(isValidNumber).toHaveBeenNthCalledWith(1, 10)
-    expect(isValidNumber).toHaveBeenNthCalledWith(2, 255)
-    expect(isValidNumber).toHaveBeenNthCalledWith(3, 255)
+    expect(isValidNumber).toHaveBeenNthCalledWith(1, 10, NumberType.COLOR)
+    expect(isValidNumber).toHaveBeenNthCalledWith(2, 255, NumberType.COLOR)
+    expect(isValidNumber).toHaveBeenNthCalledWith(3, 255, NumberType.COLOR)
     expect(isValidNumber).toHaveBeenNthCalledWith(4, 0.3, NumberType.THRESHOLD)
   })
 
@@ -152,9 +146,9 @@ describe('isRgb()', () => {
 
     expect(fcc.isRgb()).toBeTruthy()
     expect(isValidNumber).toHaveBeenCalledTimes(4)
-    expect(isValidNumber).toHaveBeenNthCalledWith(1, 10)
-    expect(isValidNumber).toHaveBeenNthCalledWith(2, 255)
-    expect(isValidNumber).toHaveBeenNthCalledWith(3, 255)
+    expect(isValidNumber).toHaveBeenNthCalledWith(1, 10, NumberType.COLOR)
+    expect(isValidNumber).toHaveBeenNthCalledWith(2, 255, NumberType.COLOR)
+    expect(isValidNumber).toHaveBeenNthCalledWith(3, 255, NumberType.COLOR)
     expect(isValidNumber).toHaveBeenNthCalledWith(4, undefined, NumberType.THRESHOLD)
   })
 
@@ -162,14 +156,14 @@ describe('isRgb()', () => {
     const fcc = new FontColorContrast(10, 0x100, 255, 0.3)
 
     expect(fcc.isRgb()).toBeFalsy()
-    expect(isValidNumber).toHaveBeenCalledWith(256)
-    expect(isValidNumber).toHaveBeenCalledWith(10)
+    expect(isValidNumber).toHaveBeenCalledWith(256, NumberType.COLOR)
+    expect(isValidNumber).toHaveBeenCalledWith(10, NumberType.COLOR)
     expect(isValidNumber).toHaveBeenCalledTimes(2)
   })
 })
 
 describe('isHexString()', () => {
-  let isValidNumber: jest.SpyInstance<boolean, [num: any, numberType?: NumberType]>
+  let isValidNumber: jest.SpyInstance<boolean, [num: any, numberType: NumberType]>
   let isNotSet: jest.SpyInstance<boolean, [value: any]>
 
   beforeEach(() => {
@@ -261,7 +255,7 @@ describe('isHexString()', () => {
 })
 
 describe('isNumber()', () => {
-  let isValidNumber: jest.SpyInstance<boolean, [num: any, numberType?: NumberType]>
+  let isValidNumber: jest.SpyInstance<boolean, [num: any, numberType: NumberType]>
   let isNotSet: jest.SpyInstance<boolean, [value: any]>
 
   beforeEach(() => {
@@ -345,7 +339,7 @@ describe('isNumber()', () => {
 })
 
 describe('isArray()', () => {
-  let isValidNumber: jest.SpyInstance<boolean, [num: any, numberType?: number]>
+  let isValidNumber: jest.SpyInstance<boolean, [num: any, numberType: number]>
   let isNotSet: jest.SpyInstance<boolean, [num: any]>
   beforeEach(() => {
     isValidNumber = jest
@@ -364,9 +358,9 @@ describe('isArray()', () => {
 
     expect(fcc.isArray()).toBeTruthy()
     expect(isValidNumber).toHaveBeenCalledTimes(4)
-    expect(isValidNumber).toHaveBeenNthCalledWith(1, 10)
-    expect(isValidNumber).toHaveBeenNthCalledWith(2, 255)
-    expect(isValidNumber).toHaveBeenNthCalledWith(3, 255)
+    expect(isValidNumber).toHaveBeenNthCalledWith(1, 10, NumberType.COLOR)
+    expect(isValidNumber).toHaveBeenNthCalledWith(2, 255, NumberType.COLOR)
+    expect(isValidNumber).toHaveBeenNthCalledWith(3, 255, NumberType.COLOR)
     expect(isValidNumber).toHaveBeenNthCalledWith(4, 0.3, NumberType.THRESHOLD)
   })
 
@@ -375,9 +369,9 @@ describe('isArray()', () => {
 
     expect(fcc.isArray()).toBeTruthy()
     expect(isValidNumber).toHaveBeenCalledTimes(4)
-    expect(isValidNumber).toHaveBeenNthCalledWith(1, 10)
-    expect(isValidNumber).toHaveBeenNthCalledWith(2, 255)
-    expect(isValidNumber).toHaveBeenNthCalledWith(3, 255)
+    expect(isValidNumber).toHaveBeenNthCalledWith(1, 10, NumberType.COLOR)
+    expect(isValidNumber).toHaveBeenNthCalledWith(2, 255, NumberType.COLOR)
+    expect(isValidNumber).toHaveBeenNthCalledWith(3, 255, NumberType.COLOR)
     expect(isValidNumber).toHaveBeenNthCalledWith(4, undefined, NumberType.THRESHOLD)
     expect(isNotSet).toHaveBeenNthCalledWith(1, undefined)
     expect(isNotSet).toHaveBeenNthCalledWith(2, undefined)
@@ -387,9 +381,9 @@ describe('isArray()', () => {
     const fcc = new FontColorContrast([0, 0xff, 0x100])
 
     expect(fcc.isArray()).toBeFalsy()
-    expect(isValidNumber).toHaveBeenNthCalledWith(1, 0)
-    expect(isValidNumber).toHaveBeenNthCalledWith(2, 0xff)
-    expect(isValidNumber).toHaveBeenNthCalledWith(3, 0x100)
+    expect(isValidNumber).toHaveBeenNthCalledWith(1, 0, NumberType.COLOR)
+    expect(isValidNumber).toHaveBeenNthCalledWith(2, 0xff, NumberType.COLOR)
+    expect(isValidNumber).toHaveBeenNthCalledWith(3, 0x100, NumberType.COLOR)
   })
 
   test('result for invalid threshold', () => {
@@ -403,21 +397,21 @@ describe('isArray()', () => {
     const fcc = new FontColorContrast(['45' as unknown as number, 0, 0])
 
     expect(fcc.isArray()).toBeFalsy()
-    expect(isValidNumber).toHaveBeenNthCalledWith(1, '45')
+    expect(isValidNumber).toHaveBeenNthCalledWith(1, '45', NumberType.COLOR)
   })
 
   test('result for NaN', () => {
     const fcc = new FontColorContrast([Number('test'), 0, 5])
 
     expect(fcc.isArray()).toBeFalsy()
-    expect(isValidNumber).toHaveBeenNthCalledWith(1, NaN)
+    expect(isValidNumber).toHaveBeenNthCalledWith(1, NaN, NumberType.COLOR)
   })
 
   test('result for Infinity', () => {
     const fcc = new FontColorContrast([Infinity, 0, 3])
 
     expect(fcc.isArray()).toBeFalsy()
-    expect(isValidNumber).toHaveBeenNthCalledWith(1, Infinity)
+    expect(isValidNumber).toHaveBeenNthCalledWith(1, Infinity, NumberType.COLOR)
   })
 
   test('result when blue is set', () => {
@@ -456,15 +450,6 @@ describe('setColorsFromRgbNumbers()', () => {
 })
 
 describe('setColorsFromArray()', () => {
-  test('colors are set and threshold is the default', () => {
-    const fcc = new FontColorContrast([5, 10, 0xff])
-    fcc.setColorsFromArray()
-    expect(fcc.red).toBe(5)
-    expect(fcc.green).toBe(10)
-    expect(fcc.blue).toBe(255)
-    expect(fcc.threshold).toBe(0.5)
-  })
-
   test('colors and threshold are set', () => {
     const fcc = new FontColorContrast([5, 10, 0xff], 0.3)
     fcc.setColorsFromArray()
@@ -473,333 +458,208 @@ describe('setColorsFromArray()', () => {
     expect(fcc.blue).toBe(255)
     expect(fcc.threshold).toBe(0.3)
   })
+
+  test('default threshold are set', () => {
+    const fcc = new FontColorContrast([5, 10, 0xff])
+    fcc.setColorsFromArray()
+    expect(fcc.red).toBe(5)
+    expect(fcc.green).toBe(10)
+    expect(fcc.blue).toBe(255)
+    expect(fcc.threshold).toBe(0.5)
+  })
 })
 
-/*
- * describe('setColorsFromNumbers()', () => {
- *   test('all possible combinations are set correctly', () => {
- *     const fcc1 = new FontColorContrast(0, 84, 600)
- *     fcc1.setColorsFromRgbNumbers()
- *     expect(fcc1.red).toBe(0)
- *     expect(fcc1.green).toBe(84)
- *     expect(fcc1.blue).toBe(0)
- */
+describe('setColorsFromHexString()', () => {
+  test('colors and threshold are set with 3 chars', () => {
+    const fcc = new FontColorContrast('fc1', 0.3)
+    fcc.setColorsFromHexString()
+    expect(fcc.red).toBe(0xff)
+    expect(fcc.green).toBe(0xcc)
+    expect(fcc.blue).toBe(0x11)
+    expect(fcc.threshold).toBe(0.3)
+  })
 
-/*
- *     const fcc2 = new FontColorContrast(0x0, 0x54, 0x258)
- *     fcc2.setColorsFromRgbNumbers()
- *     expect(fcc2.red).toBe(0)
- *     expect(fcc2.green).toBe(84)
- *     expect(fcc2.blue).toBe(0)
- *   })
- */
+  test('colors and threshold are set with 6 chars and default theshold', () => {
+    const fcc = new FontColorContrast('fce4d1')
+    fcc.setColorsFromHexString()
+    expect(fcc.red).toBe(0xfc)
+    expect(fcc.green).toBe(0xe4)
+    expect(fcc.blue).toBe(0xd1)
+    expect(fcc.threshold).toBe(0.5)
+  })
+})
 
-/*
- *   test('colors are set correctly', () => {
- *     const fcc = new FontColorContrast(123, 255, 0)
- *     fcc.setColorsFromRgbNumbers()
- *     expect(fcc.red).toBe(123)
- *     expect(fcc.green).toBe(255)
- *     expect(fcc.blue).toBe(0)
- *     expect(fcc.threshold).toBe(0.5)
- *   })
- */
+describe('setColorsFromNumber()', () => {
+  test('extreme value', () => {
+    const fcc = new FontColorContrast(1, 0.3) // 0x000fcc
+    fcc.setColorsFromNumber()
+    expect(fcc.red).toBe(0x00)
+    expect(fcc.green).toBe(0x00)
+    expect(fcc.blue).toBe(0x1)
+    expect(fcc.threshold).toBe(0.3)
+  })
+  test('colors and threshold are set', () => {
+    const fcc = new FontColorContrast(4044, 0.3) // 0x000fcc
+    fcc.setColorsFromNumber()
+    expect(fcc.red).toBe(0x00)
+    expect(fcc.green).toBe(0x0f)
+    expect(fcc.blue).toBe(0xcc)
+    expect(fcc.threshold).toBe(0.3)
+  })
 
-/*
- *   test('hex colors are converted', () => {
- *     const fcc = new FontColorContrast(0x7b, 0xff, 0, 0.2)
- *     fcc.setColorsFromRgbNumbers()
- *     expect(fcc.red).toBe(123)
- *     expect(fcc.green).toBe(255)
- *     expect(fcc.blue).toBe(0)
- *     expect(fcc.threshold).toBe(0.2)
- *   })
- */
+  test('colors and default threshold are set', () => {
+    const fcc = new FontColorContrast(0xfce4d1)
+    fcc.setColorsFromNumber()
+    expect(fcc.red).toBe(0xfc)
+    expect(fcc.green).toBe(0xe4)
+    expect(fcc.blue).toBe(0xd1)
+    expect(fcc.threshold).toBe(0.5)
+  })
+})
 
-/*
- *   test('bad colors are reset', () => {
- *     const fcc = new FontColorContrast(-3, 256, 852, 3)
- *     fcc.setColorsFromRgbNumbers()
- *     expect(fcc.red).toBe(0)
- *     expect(fcc.green).toBe(0)
- *     expect(fcc.blue).toBe(0)
- *     expect(fcc.threshold).toBe(0.5)
- *   })
- */
+describe('setThreshold(threshold)', () => {
+  test('threshold is set', () => {
+    const fcc = new FontColorContrast(0) // 0x000fcc
+    fcc.setThreshold(1)
+    expect(fcc.threshold).toBe(1)
+  })
 
-/*
- *   test('NaN and Infinity colors are reset', () => {
- *     const fcc = new FontColorContrast(3, NaN, Infinity, 3)
- *     fcc.setColorsFromRgbNumbers()
- *     expect(fcc.red).toBe(3)
- *     expect(fcc.green).toBe(0)
- *     expect(fcc.blue).toBe(0)
- *     expect(fcc.threshold).toBe(0.5)
- *   })
- * })
- */
+  test('default threshold is set', () => {
+    const fcc = new FontColorContrast(0xfce4d1)
+    fcc.setThreshold(undefined)
+    expect(fcc.threshold).toBe(0.5)
+  })
+})
 
-/*
- * describe('setColorsFromArray()', () => {
- *   test('all possible combinations are set correctly', () => {
- *     const fcc1 = new FontColorContrast([0, 84, 600])
- *     fcc1.setColorsFromArray()
- *     expect(fcc1.red).toBe(0)
- *     expect(fcc1.green).toBe(84)
- *     expect(fcc1.blue).toBe(0)
- */
+describe('isValidNumber(num, numberType)', () => {
+  test('valid COLOR 0', () => {
+    const valid = FontColorContrast.isValidNumber(0, NumberType.COLOR)
+    expect(valid).toBeTruthy()
+  })
 
-/*
- *     const fcc2 = new FontColorContrast([0x0, 0x54, 0x258])
- *     fcc2.setColorsFromArray()
- *     expect(fcc2.red).toBe(0)
- *     expect(fcc2.green).toBe(84)
- *     expect(fcc2.blue).toBe(0)
- *   })
- */
+  test('valid COLOR 0xff', () => {
+    const valid = FontColorContrast.isValidNumber(0xff, NumberType.COLOR)
+    expect(valid).toBeTruthy()
+  })
 
-/*
- *   test('colors are set correctly', () => {
- *     const fcc = new FontColorContrast([123, 255, 0])
- *     fcc.setColorsFromArray()
- *     expect(fcc.red).toBe(123)
- *     expect(fcc.green).toBe(255)
- *     expect(fcc.blue).toBe(0)
- *     expect(fcc.threshold).toBe(0.5)
- *   })
- */
+  test('invalid negative COLOR', () => {
+    const valid = FontColorContrast.isValidNumber(-3, NumberType.COLOR)
+    expect(valid).toBeFalsy()
+  })
 
-/*
- *   test('hex colors are converted', () => {
- *     const fcc = new FontColorContrast([0x7b, 0xff, 0], 0.2)
- *     fcc.setColorsFromArray()
- *     expect(fcc.red).toBe(123)
- *     expect(fcc.green).toBe(255)
- *     expect(fcc.blue).toBe(0)
- *     expect(fcc.threshold).toBe(0.2)
- *   })
- */
+  test('invalid COLOR bigger than 8 bits', () => {
+    const valid = FontColorContrast.isValidNumber(256, NumberType.COLOR)
+    expect(valid).toBeFalsy()
+  })
 
-/*
- *   test('bad colors are reset', () => {
- *     const fcc = new FontColorContrast([-3, 256, 852], 3)
- *     fcc.setColorsFromArray()
- *     expect(fcc.red).toBe(0)
- *     expect(fcc.green).toBe(0)
- *     expect(fcc.blue).toBe(0)
- *     expect(fcc.threshold).toBe(0.5)
- *   })
- */
+  test('invalid COLOR NaN', () => {
+    const valid = FontColorContrast.isValidNumber(Number('hello'), NumberType.COLOR)
+    expect(valid).toBeFalsy()
+  })
 
-/*
- *   test('NaN and Infinity colors are reset', () => {
- *     const fcc = new FontColorContrast([3, NaN, Infinity], 3)
- *     fcc.setColorsFromArray()
- *     expect(fcc.red).toBe(3)
- *     expect(fcc.green).toBe(0)
- *     expect(fcc.blue).toBe(0)
- *     expect(fcc.threshold).toBe(0.5)
- *   })
- * })
- */
+  test('invalid COLOR Infinity', () => {
+    const valid = FontColorContrast.isValidNumber(Math.pow(10, 1000), NumberType.COLOR)
+    expect(valid).toBeFalsy()
+  })
 
-/*
- * describe('setColorsFromHexString()', () => {
- *   test('string with 3 chars and hash', () => {
- *     const fcc1 = new FontColorContrast('#0C9')
- *     fcc1.setColorsFromNumber()
- *     expect(fcc1.red).toBe(0)
- *     expect(fcc1.green).toBe(204)
- *     expect(fcc1.blue).toBe(153)
- *   })
- */
+  test('invalid COLOR not a number', () => {
+    const valid = FontColorContrast.isValidNumber('foo', NumberType.COLOR)
+    expect(valid).toBeFalsy()
+  })
 
-/*
- *   test('string with 3 chars and without hash', () => {
- *     const fcc2 = new FontColorContrast('0C9')
- *     fcc2.setColorsFromNumber()
- *     expect(fcc2.red).toBe(0)
- *     expect(fcc2.green).toBe(204)
- *     expect(fcc2.blue).toBe(153)
- *   })
- */
+  test('invalid COLOR undefined', () => {
+    const valid = FontColorContrast.isValidNumber(undefined, NumberType.COLOR)
+    expect(valid).toBeFalsy()
+  })
 
-/*
- *   test('string with 6 chars and hash', () => {
- *     const fcc5 = new FontColorContrast('#00CC99')
- *     fcc5.setColorsFromNumber()
- *     expect(fcc5.red).toBe(0)
- *     expect(fcc5.green).toBe(204)
- *     expect(fcc5.blue).toBe(153)
- *   })
- */
+  test('invalid COLOR null', () => {
+    const valid = FontColorContrast.isValidNumber(null, NumberType.COLOR)
+    expect(valid).toBeFalsy()
+  })
 
-/*
- *   test('string with 6 chars without hash', () => {
- *     const fcc6 = new FontColorContrast('00CC99')
- *     fcc6.setColorsFromNumber()
- *     expect(fcc6.red).toBe(0)
- *     expect(fcc6.green).toBe(204)
- *     expect(fcc6.blue).toBe(153)
- *   })
- * })
- */
+  test('invalid RGB bigger than 24 bits', () => {
+    const valid = FontColorContrast.isValidNumber(0x100000000, NumberType.RGB)
+    expect(valid).toBeFalsy()
+  })
 
-/*
- * describe('setColorsFromNumber()', () => {
- *   test('number that generates hex with 6 chars', () => {
- *     const fcc7 = new FontColorContrast(52377)
- *     fcc7.setColorsFromNumber()
- *     expect(fcc7.red).toBe(0)
- *     expect(fcc7.green).toBe(204)
- *     expect(fcc7.blue).toBe(153)
- *   })
- */
+  test('valid THRESHOLD undefined', () => {
+    const valid = FontColorContrast.isValidNumber(undefined, NumberType.THRESHOLD)
+    expect(valid).toBeTruthy()
+  })
 
-/*
- *   test('number that generates hex with 2 chars', () => {
- *     const fcc7 = new FontColorContrast(44)
- *     fcc7.setColorsFromNumber()
- *     expect(fcc7.red).toBe(0)
- *     expect(fcc7.green).toBe(0)
- *     expect(fcc7.blue).toBe(44)
- *   })
- */
+  test('valid THRESHOLD null', () => {
+    const valid = FontColorContrast.isValidNumber(null, NumberType.THRESHOLD)
+    expect(valid).toBeTruthy()
+  })
 
-/*
- *   test('number that generates hex with 1 char', () => {
- *     const fcc7 = new FontColorContrast(9)
- *     fcc7.setColorsFromNumber()
- *     expect(fcc7.red).toBe(0)
- *     expect(fcc7.green).toBe(0)
- *     expect(fcc7.blue).toBe(9)
- *   })
- */
+  test('invalid THRESHOLD bigger than 1', () => {
+    const valid = FontColorContrast.isValidNumber(1.000000000000001, NumberType.THRESHOLD)
+    expect(valid).toBeFalsy()
+  })
+})
 
-/*
- *   test('hex number', () => {
- *     const fcc8 = new FontColorContrast(0x00CC99)
- *     fcc8.setColorsFromNumber()
- *     expect(fcc8.red).toBe(0)
- *     expect(fcc8.green).toBe(204)
- *     expect(fcc8.blue).toBe(153)
- *   })
- */
+describe('getCleanStringAndHexNum()', () => {
+  test('not a string', () => {
+    const fcc = new FontColorContrast(0)
+    const [cleanString, hexNum] = fcc.getCleanStringAndHexNum()
+    expect(cleanString).toBe('')
+    expect(hexNum).toBeFalsy()
+  })
 
-/*
- *   test('colors are set correctly', () => {
- *     const fcc = new FontColorContrast(0xb75301, 0)
- *     fcc.setColorsFromNumber()
- *     expect(fcc.red).toBe(183)
- *     expect(fcc.green).toBe(83)
- *     expect(fcc.blue).toBe(1)
- *     expect(fcc.threshold).toBe(0)
- *   })
- */
+  test('string with 4 chars', () => {
+    const fcc = new FontColorContrast('#ffcc')
+    const [cleanString, hexNum] = fcc.getCleanStringAndHexNum()
+    expect(cleanString).toBe('')
+    expect(hexNum).toBeFalsy()
+  })
 
-/*
- *   test('hex colors are converted', () => {
- *     const fcc = new FontColorContrast(12014337, 0.2)
- *     fcc.setColorsFromNumber()
- *     expect(fcc.red).toBe(183)
- *     expect(fcc.green).toBe(83)
- *     expect(fcc.blue).toBe(1)
- *     expect(fcc.threshold).toBe(0.2)
- *   })
- */
+  test('valid string with hash and 3 chars', () => {
+    const fcc = new FontColorContrast('#ffc')
+    const [cleanString, hexNum] = fcc.getCleanStringAndHexNum()
+    expect(cleanString).toBe('ffc')
+    expect(hexNum).toBe(0xffc)
+  })
 
-/*
- *   test('colors with more than 6 chars are reset', () => {
- *     const fcc = new FontColorContrast(0xb753014cf3a, 3)
- *     fcc.setColorsFromNumber()
- *     expect(fcc.red).toBe(0)
- *     expect(fcc.green).toBe(0)
- *     expect(fcc.blue).toBe(0)
- *     expect(fcc.threshold).toBe(0.5)
- *   })
- */
+  test('valid string with hash, space and 6 chars', () => {
+    const fcc = new FontColorContrast('# ff4ffc')
+    const [cleanString, hexNum] = fcc.getCleanStringAndHexNum()
+    expect(cleanString).toBe('ff4ffc')
+    expect(hexNum).toBe(0xff4ffc)
+  })
 
-/*
- *   test('invalid string is reset', () => {
- *     const fcc = new FontColorContrast('asdfg', -3)
- *     fcc.setColorsFromNumber()
- *     expect(fcc.red).toBe(0)
- *     expect(fcc.green).toBe(0)
- *     expect(fcc.blue).toBe(0)
- *     expect(fcc.threshold).toBe(0.5)
- *   })
- */
+  test('valid string without and 6 chars', () => {
+    const fcc = new FontColorContrast('ff4ffc')
+    const [cleanString, hexNum] = fcc.getCleanStringAndHexNum()
+    expect(cleanString).toBe('ff4ffc')
+    expect(hexNum).toBe(0xff4ffc)
+  })
 
-/*
- *   test('negative string is reset', () => {
- *     const fcc = new FontColorContrast('-0xccc', -3)
- *     fcc.setColorsFromNumber()
- *     expect(fcc.red).toBe(0)
- *     expect(fcc.green).toBe(0)
- *     expect(fcc.blue).toBe(0)
- *     expect(fcc.threshold).toBe(0.5)
- *   })
- */
+  test('valid string that generates NaN', () => {
+    const fcc = new FontColorContrast('hellos')
+    const [cleanString, hexNum] = fcc.getCleanStringAndHexNum()
+    expect(cleanString).toBe('hellos')
+    expect(hexNum).toBe(NaN)
+  })
+})
 
-/*
- *   test('NaN color is reset', () => {
- *     const fcc = new FontColorContrast(NaN, -3)
- *     fcc.setColorsFromNumber()
- *     expect(fcc.red).toBe(0)
- *     expect(fcc.green).toBe(0)
- *     expect(fcc.blue).toBe(0)
- *     expect(fcc.threshold).toBe(0.5)
- *   })
- */
+describe('isNotSet(value)', () => {
+  test('undefined', () =>{
+    const isSet = FontColorContrast.isNotSet(undefined)
+    expect(isSet).toBeTruthy()
+  })
 
-/*
- *   test('Infinity color is reset', () => {
- *     const fcc = new FontColorContrast(Infinity, -3)
- *     fcc.setColorsFromNumber()
- *     expect(fcc.red).toBe(0)
- *     expect(fcc.green).toBe(0)
- *     expect(fcc.blue).toBe(0)
- *     expect(fcc.threshold).toBe(0.5)
- *   })
- */
+  test('null', () =>{
+    const isSet = FontColorContrast.isNotSet(null)
+    expect(isSet).toBeTruthy()
+  })
 
-/*
- *   test('negative color is reset', () => {
- *     const fcc = new FontColorContrast(-6, -3)
- *     fcc.setColorsFromNumber()
- *     expect(fcc.red).toBe(0)
- *     expect(fcc.green).toBe(0)
- *     expect(fcc.blue).toBe(0)
- *     expect(fcc.threshold).toBe(0.5)
- *   })
- * })
- */
+  test('number', () =>{
+    const isSet = FontColorContrast.isNotSet(3)
+    expect(isSet).toBeFalsy()
+  })
 
-/*
- * *
- *test('invalid RGB with negative number', () => {
- *  const fcc = new FontColorContrast(-1, 0, 0, 0.3)
- *  expect(fcc.isRgb()).toBeFalsy()
- *})
- *
- *test('invalid RGB with NaN', () => {
- *  const fcc = new FontColorContrast(0, NaN, 10, 15)
- *  expect(fcc.isRgb()).toBeFalsy()
- *})
- *
- *test('invalid RGB with Infinity', () => {
- *  const fcc = new FontColorContrast(0, Infinity, 10, 15)
- *  expect(fcc.isRgb()).toBeFalsy()
- *})
- *
- *test('invalid RGB with number more then 255', () => {
- *  const fcc = new FontColorContrast(0, 100, 0x100, 15)
- *  expect(fcc.isRgb()).toBeFalsy()
- *})
- *
- *test('invalid RGB with string', () => {
- *  const fcc = new FontColorContrast(0, '100' as unknown as number, 0, 15)
- *  expect(fcc.isRgb()).toBeFalsy()
- *})
- *
- */
+  test('string', () =>{
+    const isSet = FontColorContrast.isNotSet('hi there')
+    expect(isSet).toBeFalsy()
+  })
+})

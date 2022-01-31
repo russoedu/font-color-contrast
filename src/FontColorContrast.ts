@@ -1,4 +1,4 @@
-enum NumberType {
+export enum NumberType {
   COLOR = 0xff,
   RGB = 0xffffff,
   THRESHOLD = 1,
@@ -59,9 +59,9 @@ export class FontColorContrast {
    */
   isRgb () {
     return (
-      FontColorContrast.isValidNumber(this.#hexColorOrRedOrArray) &&
-      FontColorContrast.isValidNumber(this.#greenOrThreshold) &&
-      FontColorContrast.isValidNumber(this.#blue) &&
+      FontColorContrast.isValidNumber(this.#hexColorOrRedOrArray, NumberType.COLOR) &&
+      FontColorContrast.isValidNumber(this.#greenOrThreshold, NumberType.COLOR) &&
+      FontColorContrast.isValidNumber(this.#blue, NumberType.COLOR) &&
       FontColorContrast.isValidNumber(this.#threshold, NumberType.THRESHOLD)
     )
   }
@@ -86,14 +86,14 @@ export class FontColorContrast {
 
   /**
    * Checks if color is set on the first param as a number
-   * @returns True if color is a number
+   * @returns True if color is a valid RGB nunbernumber
    */
   isNumber () {
     return (
       FontColorContrast.isValidNumber(this.#hexColorOrRedOrArray, NumberType.RGB) &&
-        FontColorContrast.isValidNumber(this.#greenOrThreshold, NumberType.THRESHOLD) &&
-        FontColorContrast.isNotSet(this.#blue) &&
-        FontColorContrast.isNotSet(this.#threshold)
+      FontColorContrast.isValidNumber(this.#greenOrThreshold, NumberType.THRESHOLD) &&
+      FontColorContrast.isNotSet(this.#blue) &&
+      FontColorContrast.isNotSet(this.#threshold)
     )
   }
 
@@ -105,9 +105,9 @@ export class FontColorContrast {
     return (
       Array.isArray(this.#hexColorOrRedOrArray) &&
       this.#hexColorOrRedOrArray.length === 3 &&
-      FontColorContrast.isValidNumber(this.#hexColorOrRedOrArray[0]) &&
-      FontColorContrast.isValidNumber(this.#hexColorOrRedOrArray[1]) &&
-      FontColorContrast.isValidNumber(this.#hexColorOrRedOrArray[2]) &&
+      FontColorContrast.isValidNumber(this.#hexColorOrRedOrArray[0], NumberType.COLOR) &&
+      FontColorContrast.isValidNumber(this.#hexColorOrRedOrArray[1], NumberType.COLOR) &&
+      FontColorContrast.isValidNumber(this.#hexColorOrRedOrArray[2], NumberType.COLOR) &&
       FontColorContrast.isValidNumber(this.#greenOrThreshold, NumberType.THRESHOLD) &&
       FontColorContrast.isNotSet(this.#blue) &&
       FontColorContrast.isNotSet(this.#threshold)
@@ -125,7 +125,7 @@ export class FontColorContrast {
     this.red = this.#hexColorOrRedOrArray as number
     this.green = this.#greenOrThreshold as number
     this.blue = this.#blue as number
-    this.setThreshold(this.#threshold as number)
+    this.setThreshold(this.#threshold)
   }
 
   /**
@@ -141,7 +141,7 @@ export class FontColorContrast {
     this.red = (this.#hexColorOrRedOrArray as number[])[0]
     this.green = (this.#hexColorOrRedOrArray as number[])[1]
     this.blue = (this.#hexColorOrRedOrArray as number[])[2]
-    this.setThreshold(this.#greenOrThreshold as number)
+    this.setThreshold(this.#greenOrThreshold)
   }
 
   /**
@@ -157,136 +157,51 @@ export class FontColorContrast {
    * hexColorToRGB(0x00Cc99)
    */
   setColorsFromHexString (): void {
-    const color = this.#hexColorOrRedOrArray as string
-
-    switch (color.length) {
+    switch ((this.#hexColorOrRedOrArray as string).length) {
       case 3:
       // Color has one char for each color, so they must be repeated
-        this.red = parseInt(color[0].repeat(2), 16)
-        this.green = parseInt(color[1].repeat(2), 16)
-        this.blue = parseInt(color[2].repeat(2), 16)
+        this.red = parseInt((this.#hexColorOrRedOrArray as string)[0].repeat(2), 16)
+        this.green = parseInt((this.#hexColorOrRedOrArray as string)[1].repeat(2), 16)
+        this.blue = parseInt((this.#hexColorOrRedOrArray as string)[2].repeat(2), 16)
         break
       // All chars are filled, so no transformation is needed
       case 6:
-        this.red = parseInt(color.substring(0, 2), 16)
-        this.green = parseInt(color.substring(2, 4), 16)
-        this.blue = parseInt(color.substring(4, 6), 16)
-        break
-      default:
-        this.red = 0
-        this.green = 0
-        this.blue = 0
+        this.red = parseInt((this.#hexColorOrRedOrArray as string).substring(0, 2), 16)
+        this.green = parseInt((this.#hexColorOrRedOrArray as string).substring(2, 4), 16)
+        this.blue = parseInt((this.#hexColorOrRedOrArray as string).substring(4, 6), 16)
         break
     }
-    this.setThreshold(this.#greenOrThreshold as number)
+    this.setThreshold(this.#greenOrThreshold)
   }
 
   /**
-   * Converts a ColorIntensity string or number, with all possibilities (e.g. '#009', '009', '#000099', '000099', 153, 0x00099) to the respective RGB values
-   * @param hexColor The color string or number
-   * @param threshold The threshold
-   * @example All these examples produces the same value
-   * hexColorToRGB('#0C9')
-   * hexColorToRGB('0C9')
-   * hexColorToRGB('#00CC99')
-   * hexColorToRGB('00cc99')
-   * hexColorToRGB(52377)
-   * hexColorToRGB(0x00Cc99)
+   * Converts the RGB number and sets the respective RGB values.
    */
   setColorsFromNumber (): void {
-    const color = this.getColorIntensityColor()
+    /*
+     * The RGB color has 24 bits (8 bits per color).
+     * This function uses binary operations for better performance, but can be tricky to understand. A 24 bits color could be represented as RRRRRRRR GGGGGGGG BBBBBBBB (the first 8 bits are red, the middle 8 bits are green and the last 8 bits are blue).
+     * To get each color we perform some RIGHT SHIFT and AND operations.
+     * Gets the first 8 bits of the color by shifting it 16 bits
+     * RIGHT SHIFT operation (https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Right_shift)
+     * AND operation (https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Bitwise_AND)
+     */
 
-    switch (color.length) {
-      // Color has one or two chars in the last digit, so the last digit must be repeated, and red and green are 0
-      case 1:
-      case 2:
-      // Color has two chars in the last digit, so red and green are 0
-        this.red = 0
-        this.green = 0
-        this.blue = FontColorContrast.hexToDec(color)
-        break
-      case 3:
-      // Color has one chars for each color, so they must be repeated
-        this.red = FontColorContrast.hexToDec(color[0].repeat(2))
-        this.green = FontColorContrast.hexToDec(color[1].repeat(2))
-        this.blue = FontColorContrast.hexToDec(color[2].repeat(2))
-        break
-      case 4:
-      // Color has only four chars, so red is 0
-        this.red = 0
-        this.green = FontColorContrast.hexToDec(color.substring(0, 2))
-        this.blue = FontColorContrast.hexToDec(color.substring(2, 4))
-        break
-      default:
-        // All chars are filled, so no transformation is needed
-        this.red = FontColorContrast.hexToDec(color.substring(0, 2))
-        this.green = FontColorContrast.hexToDec(color.substring(2, 4))
-        this.blue = FontColorContrast.hexToDec(color.substring(4, 6))
-        break
-    }
-    this.setThreshold(this.#greenOrThreshold as number)
+    // To get red, we shift the 24 bits number 16 bits to the right, leaving the number only with the leftmost 8 bits (RRRRRRRR)
+    this.red = (this.#hexColorOrRedOrArray as number) >> 16
+    // To get green, the middle 8 bits, we shift it by 8 bits (removing all blue bits - RRRRRRRR GGGGGGGG) and use an AND operation with "0b0000000011111111 = 0xff" to get only the rightmost bits (GGGGGGGG)
+    this.green = ((this.#hexColorOrRedOrArray as number) >> 8) & 0xff
+    // To get blue we use an AND operation with "0b000000000000000011111111 = 0xff" to get only the rightmost bits (BBBBBBBB)
+    this.blue = (this.#hexColorOrRedOrArray as number) & 0xff
+    this.setThreshold(this.#greenOrThreshold)
   }
 
   /**
    * Sets the threshold to the passed value (if valid - less than or equal 1) or the dafault (0.5)
    * @param threshold The passed threshold or undefined if not passed
    */
-  setThreshold (threshold: number) {
+  setThreshold (threshold: any) {
     this.threshold = threshold || this.threshold
-  }
-
-  /**
-   * Checks if the value is between 0 and max. If not, returns 0
-   * @param value The color or threshold to be checked
-   * @param max The maximum value (default = 255)
-   * @param responseIfError The response in case the number is outside the expected values
-   * @returns
-   */
-  static getValidNumber (value: number, max = 255, responseIfError = 0): number {
-    if (isNaN(value) || !isFinite(value) || value < 0 || value > max) return responseIfError
-    return value
-  }
-
-  /**
-   * Converts the color to its hex string value
-   * @param this.#hexColorOrRedOrArray The color string or number
-   * @returns The color string
-   */
-  getColorIntensityColor (): string {
-    const hashRegEx = /#/
-    const hexRegEx = /0x/i
-
-    const hasHash = hashRegEx.test(this.#hexColorOrRedOrArray as string)
-    const hasHex = hexRegEx.test(this.#hexColorOrRedOrArray as string)
-
-    if (typeof this.#hexColorOrRedOrArray === 'number') {
-      if (isNaN(this.#hexColorOrRedOrArray) || !isFinite(this.#hexColorOrRedOrArray) || this.#hexColorOrRedOrArray < 0 || this.#hexColorOrRedOrArray > 0xffffff) return '000'
-      return this.#hexColorOrRedOrArray.toString(16)
-    } else {
-      let clean = this.#hexColorOrRedOrArray as string
-      if (hasHash) {
-        clean = (this.#hexColorOrRedOrArray as string).replace(hashRegEx, '')
-      } else if (hasHex) {
-        clean = (this.#hexColorOrRedOrArray as string).replace(hexRegEx, '')
-      }
-      const numColor = Number(`0x${clean}`)
-      if (isNaN(numColor) || !isFinite(numColor) || numColor < 0 || numColor > 0xffffff) return '000'
-      return clean
-    }
-  }
-
-  /**
-   * Converts a hexadecimal string to it's correspondent integer
-   * @param hexString The hexadecimal string
-   * @returns The integer value
-   */
-  static hexToDec (hexString: string): number {
-    const hexRegex = /^[a-fA-F0-9]{1,2}$/
-    const hexExec = hexRegex.exec(hexString)
-    if (hexExec) {
-      return FontColorContrast.getValidNumber(parseInt(hexString, 16))
-    }
-    return 0
   }
 
   /**
@@ -295,7 +210,7 @@ export class FontColorContrast {
    * @param numberType The type of number to be chacked that defines maximum value of the number (default = NumberType.COLOR = 0xff)
    * @returns True if the number is valid
    */
-  static isValidNumber (num: any, numberType = NumberType.COLOR): boolean {
+  static isValidNumber (num: any, numberType: NumberType): boolean {
     if (numberType === NumberType.THRESHOLD && (num === undefined || num === null)) return true
     return (
       num !== undefined &&
