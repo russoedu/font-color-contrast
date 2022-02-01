@@ -1,3 +1,5 @@
+import { cssNamedColors } from './cssNamedColors'
+
 export enum NumberType {
   COLOR = 0xff,
   RGB = 0xffffff,
@@ -229,10 +231,16 @@ export class FontColorContrast {
     if (typeof this.#hexColorOrRedOrArray !== 'string') return ['', false]
 
     const cleanRegEx = /(#|\s)/ig
-    const cleanString = (this.#hexColorOrRedOrArray).replace(cleanRegEx, '')
-    const hexNum = Number('0x' + cleanString)
 
+    const namedColor = cssNamedColors.find(color => color.name === this.#hexColorOrRedOrArray)
+
+    if (namedColor) {
+      this.#hexColorOrRedOrArray = namedColor.hex.replace(cleanRegEx, '')
+    }
+    const cleanString = (this.#hexColorOrRedOrArray).replace(cleanRegEx, '')
     if (cleanString.length !== 3 && cleanString.length !== 6) return ['', false]
+
+    const hexNum = Number('0x' + cleanString)
 
     return [cleanString, hexNum]
   }
@@ -256,9 +264,9 @@ export class FontColorContrast {
     const pBlue = 0.114
 
     const contrast = Math.sqrt(
-      pRed * Math.pow((this.red / 255), 2) +
-      pGreen * Math.pow((this.green / 255), 2) +
-      pBlue * Math.pow((this.blue / 255), 2)
+      pRed * (this.red / 255) ** 2 +
+      pGreen * (this.green / 255) ** 2 +
+      pBlue * (this.blue / 255) ** 2
     )
 
     return contrast > this.threshold

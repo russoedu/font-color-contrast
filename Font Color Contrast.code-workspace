@@ -1,11 +1,18 @@
 {
-	"folders": [
-		{
-			"path": "."
-		}
-	],
-	"settings": {
-		"files.exclude": {
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "jest.autoRun": {
+      "watch": false,
+      "onSave": "test-file",
+      "onStartup": [
+        "all-tests"
+      ]
+    },
+    "files.exclude": {
       ".editorconfig": true,
       ".eslintignore": true,
       ".gitignore": true,
@@ -15,13 +22,13 @@
       ".eslintrc.js": true,
       ".npmignore": true,
       "jest.config.js": true
-  },
-  "favorites.resources": [
+    },
+    "favorites.resources": [
       "package.json",
       "./src/index.ts",
       "./src/index.test.ts"
-  ]
-	},
+    ]
+  },
   "launch": {
     "configurations": [
       {

@@ -1,4 +1,5 @@
 /* eslint-disable no-new-wrappers */
+import { cssNamedColors } from './cssNamedColors'
 import { FontColorContrast, NumberType } from './FontColorContrast'
 
 describe('constructor()', () => {
@@ -115,6 +116,227 @@ describe('getColor()', () => {
     expect(setColorsFromNumber).toHaveBeenCalledTimes(0)
     expect(setColorsFromArray).toHaveBeenCalledTimes(0)
     expect(contrastFromHSP).toHaveBeenCalledTimes(0)
+  })
+})
+
+describe('getColor() end to end', () => {
+  let setColorsFromRgbNumbers: jest.SpyInstance<any, unknown[]>
+  let setColorsFromHexString: jest.SpyInstance<any, unknown[]>
+  let setColorsFromNumber: jest.SpyInstance<any, unknown[]>
+  let setColorsFromArray: jest.SpyInstance<any, unknown[]>
+  let isRgb: jest.SpyInstance<any, unknown[]>
+  let isHexString: jest.SpyInstance<any, unknown[]>
+  let isNumber: jest.SpyInstance<any, unknown[]>
+  let isArray: jest.SpyInstance<any, unknown[]>
+  let contrastFromHSP: jest.SpyInstance<'#000000' | '#ffffff', []>
+
+  beforeEach(() => {
+    setColorsFromRgbNumbers = jest
+      .spyOn(FontColorContrast.prototype, 'setColorsFromRgbNumbers')
+    setColorsFromHexString = jest
+      .spyOn(FontColorContrast.prototype, 'setColorsFromHexString')
+    setColorsFromNumber = jest
+      .spyOn(FontColorContrast.prototype, 'setColorsFromNumber')
+    setColorsFromArray = jest
+      .spyOn(FontColorContrast.prototype, 'setColorsFromArray')
+    isRgb = jest
+      .spyOn(FontColorContrast.prototype, 'isRgb')
+    isHexString = jest
+      .spyOn(FontColorContrast.prototype, 'isHexString')
+    isNumber = jest
+      .spyOn(FontColorContrast.prototype, 'isNumber')
+    isArray = jest
+      .spyOn(FontColorContrast.prototype, 'isArray')
+    contrastFromHSP = jest
+      .spyOn(FontColorContrast.prototype, 'contrastFromHSP')
+  })
+
+  afterEach(() => {
+    jest.restoreAllMocks()
+  })
+
+  test('RGB number colors', () => {
+    const fcc = new FontColorContrast(10, 20, 255, 0.3)
+    fcc.getColor()
+
+    expect(fcc.red).toBe(10)
+    expect(fcc.green).toBe(20)
+    expect(fcc.blue).toBe(255)
+    expect(fcc.threshold).toBe(0.3)
+
+    expect(isRgb).toHaveBeenCalledTimes(1)
+    expect(setColorsFromRgbNumbers).toHaveBeenCalledTimes(1)
+    expect(isHexString).toHaveBeenCalledTimes(0)
+    expect(setColorsFromHexString).toHaveBeenCalledTimes(0)
+    expect(isNumber).toHaveBeenCalledTimes(0)
+    expect(setColorsFromNumber).toHaveBeenCalledTimes(0)
+    expect(isArray).toHaveBeenCalledTimes(0)
+    expect(setColorsFromArray).toHaveBeenCalledTimes(0)
+    expect(contrastFromHSP).toHaveBeenCalledTimes(1)
+  })
+
+  test('failed RGB number colors', () => {
+    const fcc = new FontColorContrast(10, 256, 255, 0.3)
+    fcc.getColor()
+
+    expect(fcc.red).toBe(0)
+    expect(fcc.green).toBe(0)
+    expect(fcc.blue).toBe(0)
+    expect(fcc.threshold).toBe(0.5)
+
+    expect(isRgb).toHaveBeenCalledTimes(1)
+    expect(setColorsFromRgbNumbers).toHaveBeenCalledTimes(0)
+    expect(isHexString).toHaveBeenCalledTimes(1)
+    expect(setColorsFromHexString).toHaveBeenCalledTimes(0)
+    expect(isNumber).toHaveBeenCalledTimes(1)
+    expect(setColorsFromNumber).toHaveBeenCalledTimes(0)
+    expect(isArray).toHaveBeenCalledTimes(1)
+    expect(setColorsFromArray).toHaveBeenCalledTimes(0)
+    expect(contrastFromHSP).toHaveBeenCalledTimes(0)
+  })
+
+  test('HEX string', () => {
+    const fcc = new FontColorContrast('#f35cea')
+    fcc.getColor()
+
+    expect(fcc.red).toBe(0xf3)
+    expect(fcc.green).toBe(0x5c)
+    expect(fcc.blue).toBe(0xea)
+    expect(fcc.threshold).toBe(0.5)
+
+    expect(isRgb).toHaveBeenCalledTimes(1)
+    expect(setColorsFromRgbNumbers).toHaveBeenCalledTimes(0)
+    expect(isHexString).toHaveBeenCalledTimes(1)
+    expect(setColorsFromHexString).toHaveBeenCalledTimes(1)
+    expect(isNumber).toHaveBeenCalledTimes(0)
+    expect(setColorsFromNumber).toHaveBeenCalledTimes(0)
+    expect(isArray).toHaveBeenCalledTimes(0)
+    expect(setColorsFromArray).toHaveBeenCalledTimes(0)
+    expect(contrastFromHSP).toHaveBeenCalledTimes(1)
+  })
+
+  test('failed HEX string', () => {
+    const fcc = new FontColorContrast('#f35ceac')
+    fcc.getColor()
+
+    expect(fcc.red).toBe(0)
+    expect(fcc.green).toBe(0)
+    expect(fcc.blue).toBe(0)
+    expect(fcc.threshold).toBe(0.5)
+
+    expect(isRgb).toHaveBeenCalledTimes(1)
+    expect(setColorsFromRgbNumbers).toHaveBeenCalledTimes(0)
+    expect(isHexString).toHaveBeenCalledTimes(1)
+    expect(setColorsFromHexString).toHaveBeenCalledTimes(0)
+    expect(isNumber).toHaveBeenCalledTimes(1)
+    expect(setColorsFromNumber).toHaveBeenCalledTimes(0)
+    expect(isArray).toHaveBeenCalledTimes(1)
+    expect(setColorsFromArray).toHaveBeenCalledTimes(0)
+    expect(contrastFromHSP).toHaveBeenCalledTimes(0)
+  })
+
+  test('HEX number', () => {
+    const fcc = new FontColorContrast(0xf35cea)
+    fcc.getColor()
+
+    expect(fcc.red).toBe(0xf3)
+    expect(fcc.green).toBe(0x5c)
+    expect(fcc.blue).toBe(0xea)
+    expect(fcc.threshold).toBe(0.5)
+
+    expect(isRgb).toHaveBeenCalledTimes(1)
+    expect(setColorsFromRgbNumbers).toHaveBeenCalledTimes(0)
+    expect(isHexString).toHaveBeenCalledTimes(1)
+    expect(setColorsFromHexString).toHaveBeenCalledTimes(0)
+    expect(isNumber).toHaveBeenCalledTimes(1)
+    expect(setColorsFromNumber).toHaveBeenCalledTimes(1)
+    expect(isArray).toHaveBeenCalledTimes(0)
+    expect(setColorsFromArray).toHaveBeenCalledTimes(0)
+    expect(contrastFromHSP).toHaveBeenCalledTimes(1)
+  })
+
+  test('failed HEX number', () => {
+    const fcc = new FontColorContrast(0x1000000)
+    fcc.getColor()
+
+    expect(fcc.red).toBe(0)
+    expect(fcc.green).toBe(0)
+    expect(fcc.blue).toBe(0)
+    expect(fcc.threshold).toBe(0.5)
+
+    expect(isRgb).toHaveBeenCalledTimes(1)
+    expect(setColorsFromRgbNumbers).toHaveBeenCalledTimes(0)
+    expect(isHexString).toHaveBeenCalledTimes(1)
+    expect(setColorsFromHexString).toHaveBeenCalledTimes(0)
+    expect(isNumber).toHaveBeenCalledTimes(1)
+    expect(setColorsFromNumber).toHaveBeenCalledTimes(0)
+    expect(isArray).toHaveBeenCalledTimes(1)
+    expect(setColorsFromArray).toHaveBeenCalledTimes(0)
+    expect(contrastFromHSP).toHaveBeenCalledTimes(0)
+  })
+
+  test('HEX array', () => {
+    const fcc = new FontColorContrast([10, 20, 255])
+    fcc.getColor()
+
+    expect(fcc.red).toBe(10)
+    expect(fcc.green).toBe(20)
+    expect(fcc.blue).toBe(255)
+    expect(fcc.threshold).toBe(0.5)
+
+    expect(isRgb).toHaveBeenCalledTimes(1)
+    expect(setColorsFromRgbNumbers).toHaveBeenCalledTimes(0)
+    expect(isHexString).toHaveBeenCalledTimes(1)
+    expect(setColorsFromHexString).toHaveBeenCalledTimes(0)
+    expect(isNumber).toHaveBeenCalledTimes(1)
+    expect(setColorsFromNumber).toHaveBeenCalledTimes(0)
+    expect(isArray).toHaveBeenCalledTimes(1)
+    expect(setColorsFromArray).toHaveBeenCalledTimes(1)
+    expect(contrastFromHSP).toHaveBeenCalledTimes(1)
+  })
+
+  test('failed HEX array', () => {
+    const fcc = new FontColorContrast([10, 256, 255])
+    fcc.getColor()
+
+    expect(fcc.red).toBe(0)
+    expect(fcc.green).toBe(0)
+    expect(fcc.blue).toBe(0)
+    expect(fcc.threshold).toBe(0.5)
+
+    expect(isRgb).toHaveBeenCalledTimes(1)
+    expect(setColorsFromRgbNumbers).toHaveBeenCalledTimes(0)
+    expect(isHexString).toHaveBeenCalledTimes(1)
+    expect(setColorsFromHexString).toHaveBeenCalledTimes(0)
+    expect(isNumber).toHaveBeenCalledTimes(1)
+    expect(setColorsFromNumber).toHaveBeenCalledTimes(0)
+    expect(isArray).toHaveBeenCalledTimes(1)
+    expect(setColorsFromArray).toHaveBeenCalledTimes(0)
+    expect(contrastFromHSP).toHaveBeenCalledTimes(0)
+  })
+
+  test('all named css color', () => {
+    for (const color of cssNamedColors) {
+      const threshold = Math.random()
+
+      const fcc = new FontColorContrast(color.name, threshold)
+
+      fcc.getColor()
+
+      expect(fcc.red).toBe(parseInt((color.hex).substring(1, 3), 16))
+      expect(fcc.green).toBe(parseInt((color.hex).substring(3, 5), 16))
+      expect(fcc.blue).toBe(parseInt((color.hex).substring(5, 7), 16))
+      expect(fcc.threshold).toBe(threshold)
+    }
+    expect(isRgb).toHaveBeenCalledTimes(cssNamedColors.length)
+    expect(setColorsFromRgbNumbers).toHaveBeenCalledTimes(0)
+    expect(isHexString).toHaveBeenCalledTimes(cssNamedColors.length)
+    expect(setColorsFromHexString).toHaveBeenCalledTimes(cssNamedColors.length)
+    expect(isNumber).toHaveBeenCalledTimes(0)
+    expect(setColorsFromNumber).toHaveBeenCalledTimes(0)
+    expect(isArray).toHaveBeenCalledTimes(0)
+    expect(setColorsFromArray).toHaveBeenCalledTimes(0)
+    expect(contrastFromHSP).toHaveBeenCalledTimes(cssNamedColors.length)
   })
 })
 
@@ -640,6 +862,19 @@ describe('getCleanStringAndHexNum()', () => {
     expect(cleanString).toBe('hellos')
     expect(hexNum).toBe(NaN)
   })
+
+  test('named css color', () => {
+    for (const color of cssNamedColors) {
+      const expectedCleanString = color.hex.substring(1, 7)
+      const expectedHexNum = Number('0x' + expectedCleanString)
+
+      const fcc = new FontColorContrast(color.name)
+
+      const [cleanString, hexNum] = fcc.getCleanStringAndHexNum()
+      expect(cleanString).toBe(expectedCleanString)
+      expect(hexNum).toBe(expectedHexNum)
+    }
+  })
 })
 
 describe('isNotSet(value)', () => {
@@ -691,12 +926,24 @@ describe('contrastFromHSP()', () => {
 
     expect(result).toBe('#ffffff')
   })
-  test('#7e7e7e', () => {
-    fcc.red = 0x7e
-    fcc.green = 0x7e
-    fcc.blue = 0x7e
+
+  test('forced threshold 1', () => {
+    fcc.red = 0x80
+    fcc.green = 0x80
+    fcc.blue = 0x80
+    fcc.threshold = 1
     const result = fcc.contrastFromHSP()
 
     expect(result).toBe('#ffffff')
+  })
+
+  test('forced threshold 0', () => {
+    fcc.red = 0x7f
+    fcc.green = 0x7f
+    fcc.blue = 0x7f
+    fcc.threshold = 0
+    const result = fcc.contrastFromHSP()
+
+    expect(result).toBe('#000000')
   })
 })
