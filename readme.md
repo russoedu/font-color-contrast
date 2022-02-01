@@ -148,3 +148,6 @@ Changed target to ES2015
 
 ### 10.1.0
 Fixed package installation from the new TS version
+
+### 10.5.0
+Many improved checks to make sure the color is a valid set color and recreated all tests. The function now encapsulates a function in a class.

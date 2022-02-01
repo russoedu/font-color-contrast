@@ -158,14 +158,14 @@ export class FontColorContrast {
    */
   setColorsFromHexString (): void {
     switch ((this.#hexColorOrRedOrArray as string).length) {
-      case 3:
       // Color has one char for each color, so they must be repeated
+      case 3:
         this.red = parseInt((this.#hexColorOrRedOrArray as string)[0].repeat(2), 16)
         this.green = parseInt((this.#hexColorOrRedOrArray as string)[1].repeat(2), 16)
         this.blue = parseInt((this.#hexColorOrRedOrArray as string)[2].repeat(2), 16)
         break
       // All chars are filled, so no transformation is needed
-      case 6:
+      default:
         this.red = parseInt((this.#hexColorOrRedOrArray as string).substring(0, 2), 16)
         this.green = parseInt((this.#hexColorOrRedOrArray as string).substring(2, 4), 16)
         this.blue = parseInt((this.#hexColorOrRedOrArray as string).substring(4, 6), 16)
@@ -257,8 +257,8 @@ export class FontColorContrast {
 
     const contrast = Math.sqrt(
       pRed * Math.pow((this.red / 255), 2) +
-    pGreen * Math.pow((this.green / 255), 2) +
-    pBlue * Math.pow((this.blue / 255), 2)
+      pGreen * Math.pow((this.green / 255), 2) +
+      pBlue * Math.pow((this.blue / 255), 2)
     )
 
     return contrast > this.threshold

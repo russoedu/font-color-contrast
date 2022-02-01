@@ -643,23 +643,60 @@ describe('getCleanStringAndHexNum()', () => {
 })
 
 describe('isNotSet(value)', () => {
-  test('undefined', () =>{
+  test('undefined', () => {
     const isSet = FontColorContrast.isNotSet(undefined)
     expect(isSet).toBeTruthy()
   })
 
-  test('null', () =>{
+  test('null', () => {
     const isSet = FontColorContrast.isNotSet(null)
     expect(isSet).toBeTruthy()
   })
 
-  test('number', () =>{
+  test('number', () => {
     const isSet = FontColorContrast.isNotSet(3)
     expect(isSet).toBeFalsy()
   })
 
-  test('string', () =>{
+  test('string', () => {
     const isSet = FontColorContrast.isNotSet('hi there')
     expect(isSet).toBeFalsy()
+  })
+})
+
+describe('contrastFromHSP()', () => {
+  const fcc = new FontColorContrast('#098')
+  test('#098', () => {
+    fcc.red = 0
+    fcc.green = 0x99
+    fcc.blue = 0x88
+    const result = fcc.contrastFromHSP()
+
+    expect(result).toBe('#ffffff')
+  })
+
+  test('#808080', () => {
+    fcc.red = 0x80
+    fcc.green = 0x80
+    fcc.blue = 0x80
+    const result = fcc.contrastFromHSP()
+
+    expect(result).toBe('#000000')
+  })
+  test('#7f7f7f', () => {
+    fcc.red = 0x7f
+    fcc.green = 0x7f
+    fcc.blue = 0x7f
+    const result = fcc.contrastFromHSP()
+
+    expect(result).toBe('#ffffff')
+  })
+  test('#7e7e7e', () => {
+    fcc.red = 0x7e
+    fcc.green = 0x7e
+    fcc.blue = 0x7e
+    const result = fcc.contrastFromHSP()
+
+    expect(result).toBe('#ffffff')
   })
 })
