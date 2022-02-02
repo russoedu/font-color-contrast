@@ -35,12 +35,12 @@ You can change this behaviour by passing the optional `threshold` parameter, so 
 
 You can use the module 4 ways, with an optional parameter (from 0 to 1) for contrast threshold:
 - with a hexadecimal color string
-  - fontColor('olivedrab')
-  - fontColor('olivedrab', 0.2)
-- with a CSS color
   - fontColor('#f7d4fc')
   - fontColor('f7d4fc')
   - fontColor('f7d4fc', 0.2)
+- with a CSS color
+  - fontColor('olivedrab')
+  - fontColor('olivedrab', 0.2)
 - with a color number
   - fontColor(0xf7d56a)
   - fontColor(16242026)
