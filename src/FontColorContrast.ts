@@ -1,4 +1,5 @@
 import { cssNamedColors } from './cssNamedColors'
+import { CssColor } from './CssNamedColorsType'
 
 export enum NumberType {
   COLOR = 0xff,
@@ -23,12 +24,12 @@ export class FontColorContrast {
 
   /**
    * Sets the #params in the instance
-   * @param hexColorOrRedOrArray One of the options: hex color number, hex color string, array with red, green and blue or string or the red portion of the color
+   * @param hexColorOrRedOrArray One of the options: hex color number, hex color string, named CSS color, array with red, green and blue or string or the red portion of the color
    * @param greenOrThreshold The green portion of the color or the contrast threshold to control the resulting font color
    * @param blue The blue portion of the color
    * @param threshold Contrast threshold to control the resulting font color
    */
-  constructor (hexColorOrRedOrArray: string | number | number[], greenOrThreshold?: number, blue?: number, threshold?: number) {
+  constructor (hexColorOrRedOrArray: string | number | number[] | CssColor, greenOrThreshold?: number, blue?: number, threshold?: number) {
     this.#hexColorOrRedOrArray = hexColorOrRedOrArray
     this.#greenOrThreshold = greenOrThreshold
     this.#blue = blue
