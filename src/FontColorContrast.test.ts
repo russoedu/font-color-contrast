@@ -784,6 +784,11 @@ describe('isValidNumber(num, numberType)', () => {
     expect(valid).toBeFalsy()
   })
 
+  test('invalid COLOR decimal', () => {
+    const valid = FontColorContrast.isValidNumber(123.5, NumberType.COLOR)
+    expect(valid).toBeFalsy()
+  })
+
   test('invalid COLOR not a number', () => {
     const valid = FontColorContrast.isValidNumber('foo', NumberType.COLOR)
     expect(valid).toBeFalsy()

@@ -216,9 +216,10 @@ export class FontColorContrast {
   static isValidNumber (num: any, numberType: NumberType): boolean {
     if (numberType === NumberType.THRESHOLD && (num === undefined || num === null)) return true
     return (
+      typeof num === 'number' &&
+      ((numberType !== NumberType.THRESHOLD && Number.isInteger(num)) || numberType === NumberType.THRESHOLD) &&
       num !== undefined &&
       num !== null &&
-      typeof num === 'number' &&
       num >= 0 &&
       num <= numberType
     )
