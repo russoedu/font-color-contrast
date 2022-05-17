@@ -42,4 +42,10 @@ describe('fontColorContrast', () => {
     expect(getColor).toHaveBeenCalledTimes(1)
     expect(c1).toBe('#000000')
   })
+
+  test('getColor is called correctly with wrong CSS color', () => {
+    const c1 = fontColorContrast('deepskyblues')
+    expect(getColor).toHaveBeenCalledTimes(1)
+    expect(c1).toBe('#ffffff')
+  })
 })
